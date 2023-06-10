@@ -10,6 +10,6 @@ public interface MatchupService {
     String saveMatchup(Matchup matchup);
     Matchup updateMatchup(int id, Matchup matchup);
     Matchup findMatchupById(int id);
-//    List<Matchup> getMatchupsByPlayerName(String name);
-    List<Matchup> getAllMatchupsByDeckName(String name);
+    List<Matchup> getAllMatchupsByPlayerName(String name);
+    List<Matchup> getAllMatchupsByDeckName(String deckName);
 }

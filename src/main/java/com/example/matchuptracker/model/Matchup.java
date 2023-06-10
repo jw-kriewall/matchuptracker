@@ -9,19 +9,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Matchup {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
-    private String playerOne;
+    private String playerOneName;
     private String playerOneDeck;
-    private String playerTwo;
+    private String playerTwoName;
     private String playerTwoDeck;
     private String startingPlayer;
     private String winningDeck;
+    private String format;
     private String notes;
 
     public String getNotes() {
@@ -40,8 +40,6 @@ public class Matchup {
         this.format = format;
     }
 
-    private String format;
-
     public int getId() {
         return id;
     }
@@ -50,12 +48,12 @@ public class Matchup {
         this.id = id;
     }
 
-    public String getPlayerOne() {
-        return playerOne;
+    public String getPlayerOneName() {
+        return playerOneName;
     }
 
-    public void setPlayerOne(String playerOne) {
-        this.playerOne = playerOne;
+    public void setPlayerOneName(String playerOne) {
+        this.playerOneName = playerOne;
     }
 
     public String getPlayerOneDeck() {
@@ -66,12 +64,12 @@ public class Matchup {
         this.playerOneDeck = playerOneDeck;
     }
 
-    public String getPlayerTwo() {
-        return playerTwo;
+    public String getPlayerTwoName() {
+        return playerTwoName;
     }
 
-    public void setPlayerTwo(String playerTwo) {
-        this.playerTwo = playerTwo;
+    public void setPlayerTwoName(String playerTwo) {
+        this.playerTwoName = playerTwo;
     }
 
     public String getPlayerTwoDeck() {

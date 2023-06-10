@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -38,12 +39,13 @@ public class MatchupServiceImpl implements MatchupService {
 
         existingMatchup.setFormat(matchup.getFormat());
         existingMatchup.setNotes(matchup.getNotes());
-        existingMatchup.setPlayerOne(matchup.getPlayerOne());
-        existingMatchup.setPlayerTwo(matchup.getPlayerTwo());
+        existingMatchup.setPlayerOneName(matchup.getPlayerOneName());
+        existingMatchup.setPlayerTwoName(matchup.getPlayerTwoName());
         existingMatchup.setPlayerOneDeck(matchup.getPlayerOneDeck());
         existingMatchup.setPlayerTwoDeck(matchup.getPlayerTwoDeck());
         existingMatchup.setStartingPlayer(matchup.getStartingPlayer());
         existingMatchup.setWinningDeck(matchup.getWinningDeck());
+        existingMatchup.setFormat(matchup.getFormat());
 
         repository.save(existingMatchup);
         return existingMatchup;
@@ -55,14 +57,26 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
     @Override
-    public List<Matchup> getAllMatchupsByDeckName(String name) {
+    public List<Matchup> getAllMatchupsByPlayerName(String name) {
+        List<Matchup> matchupsByPlayer = new ArrayList<>();
+        repository.findAll().stream()
+                .filter(Objects::nonNull)
+                .filter(matchup -> (
+                matchup.getPlayerOneName().toLowerCase().contains(name.toLowerCase()) || matchup.getPlayerTwoName().toLowerCase().contains(name.toLowerCase())))
+                .forEach(result -> matchupsByPlayer.add(result));
+        return matchupsByPlayer;
+    }
+
+    @Override
+    public List<Matchup> getAllMatchupsByDeckName(String deckName) {
         List<Matchup> matchupsByDeck = new ArrayList<>();
-        repository.findAll().stream().filter(matchup -> (matchup.getPlayerOneDeck().toLowerCase().contains(name.toLowerCase()))).forEach(result -> matchupsByDeck.add(result));
+        repository.findAll().stream()
+                .filter(Objects::nonNull)
+                .filter(matchup -> (
+                matchup.getPlayerOneDeck().toLowerCase().contains(deckName.toLowerCase()) || matchup.getPlayerTwoDeck().toLowerCase().contains(deckName.toLowerCase())))
+                .forEach(result -> matchupsByDeck.add(result));
         return matchupsByDeck;
     }
 
-//    @Override
-//    public List<Matchup> getMatchupsByPlayerName(String name) {
-//        return repository.findById(name.getBytes(StandardCharsets.UTF_8));
-//    }
+
 }

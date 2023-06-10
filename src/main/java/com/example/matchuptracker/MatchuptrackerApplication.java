@@ -6,7 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MatchuptrackerApplication {
 
+	// Full Stack application
 	// https://www.youtube.com/watch?v=O_XL9oQ1_To
+	// https://www.youtube.com/watch?v=4LZKnegAm4g
 
 	public static void main(String[] args) {
 		SpringApplication.run(MatchuptrackerApplication.class, args);

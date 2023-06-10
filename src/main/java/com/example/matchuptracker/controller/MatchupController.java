@@ -40,9 +40,14 @@ public class MatchupController {
         return service.findMatchupById(id).toString();
     }
 
-    @GetMapping("/deckName/{name}")
-    public List<Matchup> getMatchupByDeckName(@PathVariable String name) {
-        return service.getAllMatchupsByDeckName(name);
+    @GetMapping("/deckName/{deckName}")
+    public List<Matchup> getMatchupByDeckName(@PathVariable String deckName) {
+        return service.getAllMatchupsByDeckName(deckName);
+    }
+
+    @GetMapping("/playerName/{playerName}")
+    public List<Matchup> getMatchupsByDeckName(@PathVariable String playerName) {
+        return service.getAllMatchupsByPlayerName(playerName);
     }
 
 

@@ -1,0 +1,34 @@
+[
+  {
+    "playerOneName": "David",
+    "playerOneDeck": "Warrior Knights",
+    "playerTwoName": "Sophia",
+    "playerTwoDeck": "Mystic Mages",
+    "startingPlayer": "David",
+    "winningDeck": "Warrior Knights",
+    "format": "Legacy",
+    "notes": "David dominated the game with strategic moves and won decisively."
+  }
+,
+  {
+    "playerOneName": "Alex",
+    "playerOneDeck": "Elemental Sorcerers",
+    "playerTwoName": "Emily",
+    "playerTwoDeck": "Nature Guardians",
+    "startingPlayer": "Emily",
+    "winningDeck": "Nature Guardians",
+    "format": "Modern",
+    "notes": "Emily successfully defended against Alex's aggressive attacks and won the match."
+  }
+,
+  {
+    "playerOneName": "John",
+    "playerOneDeck": "Dragon Knights",
+    "playerTwoName": "Sarah",
+    "playerTwoDeck": "Shadow Assassins",
+    "startingPlayer": "John",
+    "winningDeck": "Dragon Knights",
+    "format": "Standard",
+    "notes": "John won with a powerful combo in the final round."
+  }
+]
