@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/matchups")
@@ -36,8 +37,8 @@ public class MatchupController {
     }
 
     @GetMapping("/getbymatchid/{id}")
-    public String getMatchupById(@PathVariable int id) {
-        return service.findMatchupById(id).toString();
+    public Matchup getMatchupById(@PathVariable int id) {
+        return service.findMatchupById(id);
     }
 
     @GetMapping("/deckName/{deckName}")
@@ -46,12 +47,18 @@ public class MatchupController {
     }
 
     @GetMapping("/playerName/{playerName}")
-    public List<Matchup> getMatchupsByDeckName(@PathVariable String playerName) {
+    public List<Matchup> getMatchupsByPlayerName(@PathVariable String playerName) {
         return service.getAllMatchupsByPlayerName(playerName);
     }
 
+    @GetMapping("/format/{format}")
+    public List<Matchup> getMatchupsByFormat(@PathVariable String format) {
+        return service.getAllMatchupsByFormat(format);
+    }
 
-    //    TODO    //
-    // get by user
-    //
+    @GetMapping("/percentages/{deckName}")
+    public Map<String, Double> getMatchupPercentagesByDeckName(@PathVariable String deckName) {
+        return service.getMatchupPercentagesByDeckName(deckName);
+    }
+
 }

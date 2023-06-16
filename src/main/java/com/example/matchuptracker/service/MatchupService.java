@@ -3,6 +3,7 @@ package com.example.matchuptracker.service;
 import com.example.matchuptracker.model.Matchup;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MatchupService {
 
@@ -12,4 +13,7 @@ public interface MatchupService {
     Matchup findMatchupById(int id);
     List<Matchup> getAllMatchupsByPlayerName(String name);
     List<Matchup> getAllMatchupsByDeckName(String deckName);
+    List<Matchup> getAllMatchupsByFormat(String format);
+    // pass in a deck name, return a list of matchups with win percentages
+    Map<String, Double> getMatchupPercentagesByDeckName(String deckName);
 }

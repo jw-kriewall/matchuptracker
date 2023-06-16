@@ -5,12 +5,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Matchup {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -30,14 +32,6 @@ public class Matchup {
 
     public void setNotes(String notes) {
         this.notes = notes;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
     }
 
     public int getId() {
@@ -94,5 +88,13 @@ public class Matchup {
 
     public void setWinningDeck(String winningDeck) {
         this.winningDeck = winningDeck;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
     }
 }
