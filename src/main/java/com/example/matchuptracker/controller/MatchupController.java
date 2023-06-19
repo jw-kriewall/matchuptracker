@@ -61,4 +61,9 @@ public class MatchupController {
         return service.getMatchupPercentagesByDeckName(deckName);
     }
 
+    @GetMapping("/totalGames/{deckName}")
+    public Map<String, Integer> getTotalMatchesByDeck(@PathVariable String deckName) {
+        return service.getTotalMatchesByDeck(deckName);
+    }
+
 }

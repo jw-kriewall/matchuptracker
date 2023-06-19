@@ -88,10 +88,6 @@ public class MatchupServiceImpl implements MatchupService {
 
     @Override
     public Map<String, Double> getMatchupPercentagesByDeckName(String deckName) {
-        // filter through DB for all where playerOneDeck or playerTwoDeck .contains( deckName )
-        // Count # of matchs + wins for the given deck name
-        // generate overall winning percentage
-
 
         Map<String, Double> winningPercentageMap = new HashMap<>();
 
@@ -122,7 +118,7 @@ public class MatchupServiceImpl implements MatchupService {
                     !matchupsIncludingDeckName.get(i).getPlayerTwoDeck().contentEquals(deckName)) {
                 checkedOpponentDeck = matchupsIncludingDeckName.get(i).getPlayerTwoDeck();
             }
-// move
+
             if(checkedOpponentDeck != ""){
                 String finalCheckedOpponentDeck = checkedOpponentDeck;
                 matchupTotalGames = (int)matchupsIncludingDeckName.stream().filter(matchup ->
@@ -140,12 +136,33 @@ public class MatchupServiceImpl implements MatchupService {
                 winningPercentageMap.put(finalCheckedOpponentDeck, calculatePercentage(totalWins, matchupTotalGames));
             }
         }
-
         return winningPercentageMap;
     }
 
+    public Map<String, Integer> getTotalMatchesByDeck(String deckName) {
+        Map<String, Integer> matchupsCount = new HashMap<>();
+        matchupsCount.put(deckName, 0);
 
-    public double calculatePercentage(int numerator, int denominator){
+        List<Matchup> matchupsIncludingDeckName = getAllMatchupsByDeckName(deckName);
+        int numberOfTotalMatchups = (int)matchupsIncludingDeckName.stream().count();
+
+        for(int i = 0; i < numberOfTotalMatchups; i++) {
+            if(matchupsIncludingDeckName.get(i).getPlayerOneDeck().equals(matchupsIncludingDeckName.get(i).getPlayerTwoDeck())) {
+                matchupsCount.merge(deckName, 1, Integer::sum);
+            }
+            if(matchupsIncludingDeckName.get(i).getPlayerOneDeck() != matchupsIncludingDeckName.get(i).getPlayerTwoDeck()) {
+                if(!matchupsIncludingDeckName.get(i).getPlayerOneDeck().contains(deckName)) {
+                    matchupsCount.merge(matchupsIncludingDeckName.get(i).getPlayerOneDeck(), 1, Integer::sum);
+                } else if (!matchupsIncludingDeckName.get(i).getPlayerTwoDeck().contains(deckName)) {
+                    matchupsCount.merge(matchupsIncludingDeckName.get(i).getPlayerTwoDeck(), 1, Integer::sum);
+                }
+            }
+        }
+        return matchupsCount;
+    }
+
+
+    private double calculatePercentage(int numerator, int denominator){
         double result = ((double)numerator / (double)denominator) * 100;
         if(result > 0){
             return result;

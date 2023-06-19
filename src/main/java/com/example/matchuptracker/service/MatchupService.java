@@ -14,6 +14,6 @@ public interface MatchupService {
     List<Matchup> getAllMatchupsByPlayerName(String name);
     List<Matchup> getAllMatchupsByDeckName(String deckName);
     List<Matchup> getAllMatchupsByFormat(String format);
-    // pass in a deck name, return a list of matchups with win percentages
     Map<String, Double> getMatchupPercentagesByDeckName(String deckName);
+    Map<String, Integer> getTotalMatchesByDeck(String deckName);
 }
