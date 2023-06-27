@@ -73,7 +73,6 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
     // @TODO: Lookup predicates
-
     @Override
     public List<Matchup> getAllMatchupsByFormat(String format) {
         List<Matchup> matchupsByFormat = new ArrayList<>();
@@ -88,7 +87,6 @@ public class MatchupServiceImpl implements MatchupService {
     public Map<String, Double> getMatchupPercentagesByDeckName(String deckName) {
 
         Map<String, Double> winningPercentageMap = new HashMap<>();
-
         List<Matchup> matchupsIncludingDeckName = getAllMatchupsByDeckName(deckName);
 
         // Make a smaller list of matchups where only one other deck is checked.
