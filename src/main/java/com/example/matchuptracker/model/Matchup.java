@@ -4,15 +4,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class Matchup {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -97,4 +95,20 @@ public class Matchup {
     public void setFormat(String format) {
         this.format = format;
     }
+
+
+//    @Override
+//    public String toString() {
+//        return "Matchup{" +
+//                "id=" + id +
+//                ", playerOneName='" + playerOneName + '\'' +
+//                ", playerOneDeck='" + playerOneDeck + '\'' +
+//                ", playerTwoName='" + playerTwoName + '\'' +
+//                ", playerTwoDeck='" + playerTwoDeck + '\'' +
+//                ", startingPlayer='" + startingPlayer + '\'' +
+//                ", winningDeck='" + winningDeck + '\'' +
+//                ", format='" + format + '\'' +
+//                ", notes='" + notes + '\'' +
+//                '}';
+//    }
 }

@@ -5,10 +5,9 @@ import com.example.matchuptracker.repository.MatchupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -67,14 +66,13 @@ public class MatchupServiceImpl implements MatchupService {
 
     @Override
     public List<Matchup> getAllMatchupsByDeckName(String deckName) {
-        List<Matchup> matchupsByDeck = new ArrayList<>();
-        repository.findAll().stream()
+        return repository.findAll().stream()
                 .filter(Objects::nonNull)
-                .filter(matchup -> (
-                matchup.getPlayerOneDeck().toLowerCase().contains(deckName.toLowerCase()) || matchup.getPlayerTwoDeck().toLowerCase().contains(deckName.toLowerCase())))
-                .forEach(result -> matchupsByDeck.add(result));
-        return matchupsByDeck;
+                .filter(matchup -> matchup.getPlayerOneDeck().equalsIgnoreCase(deckName) || matchup.getPlayerTwoDeck().equalsIgnoreCase(deckName))
+                .collect(Collectors.toList());
     }
+
+    // @TODO: Update dictionary. Lookup predicates
 
     @Override
     public List<Matchup> getAllMatchupsByFormat(String format) {
@@ -92,7 +90,7 @@ public class MatchupServiceImpl implements MatchupService {
         Map<String, Double> winningPercentageMap = new HashMap<>();
 
         List<Matchup> matchupsIncludingDeckName = getAllMatchupsByDeckName(deckName);
-        int numberOfTotalMatchups = (int)matchupsIncludingDeckName.stream().count();
+        int numberOfTotalMatchups = matchupsIncludingDeckName.size();
 
         // Make a smaller list of matchups where only one other deck is checked.
         // add that deck to the checkedMatchups array so it doesn't get checked again.
@@ -105,28 +103,36 @@ public class MatchupServiceImpl implements MatchupService {
         // that isn't in map already.
         // calculate that win percentage
         // add to map.
-        for(int i = 0; i < numberOfTotalMatchups; i++) {
+
+        for(Matchup matchup : matchupsIncludingDeckName) {
+
+//        }
+//        for(int i = 0; i < numberOfTotalMatchups; i++) {
             String checkedOpponentDeck = "";
-            int matchupTotalGames = 0;
-            int totalWins = 0;
+            long matchupTotalGames = 0;
+            long totalWins = 0;
+
+            String deckOne = matchup.getPlayerOneDeck();
+
+            // Pull out deck check logic.
 
             // Setting deck to filter by
-            if(!winningPercentageMap.containsKey(matchupsIncludingDeckName.get(i).getPlayerOneDeck()) &&
-                !matchupsIncludingDeckName.get(i).getPlayerOneDeck().contentEquals(deckName)) {
-                checkedOpponentDeck = matchupsIncludingDeckName.get(i).getPlayerOneDeck();
-            } else if (!winningPercentageMap.containsKey(matchupsIncludingDeckName.get(i).getPlayerTwoDeck()) &&
-                    !matchupsIncludingDeckName.get(i).getPlayerTwoDeck().contentEquals(deckName)) {
-                checkedOpponentDeck = matchupsIncludingDeckName.get(i).getPlayerTwoDeck();
+            if(!winningPercentageMap.containsKey(deckOne) &&
+                !deckOne.contentEquals(deckName)) {
+                checkedOpponentDeck = deckOne;
+            } else if (!winningPercentageMap.containsKey(matchup.getPlayerTwoDeck()) &&
+                    !matchup.getPlayerTwoDeck().contentEquals(deckName)) {
+                checkedOpponentDeck = matchup.getPlayerTwoDeck();
             }
 
             if(checkedOpponentDeck != ""){
                 String finalCheckedOpponentDeck = checkedOpponentDeck;
-                matchupTotalGames = (int)matchupsIncludingDeckName.stream().filter(matchup ->
-                        matchup.getPlayerOneDeck().contains(finalCheckedOpponentDeck)).count() +
-                        (int)matchupsIncludingDeckName.stream().filter(matchup ->
-                        matchup.getPlayerTwoDeck().contains(finalCheckedOpponentDeck)).count();
-                totalWins = (int)matchupsIncludingDeckName.stream().filter(matchup ->
-                        matchup.getWinningDeck().contains(finalCheckedOpponentDeck)).count();
+                matchupTotalGames = matchupsIncludingDeckName.stream().filter(it ->
+                        it.getPlayerOneDeck().contains(finalCheckedOpponentDeck)).count() +
+                        matchupsIncludingDeckName.stream().filter(it ->
+                        it.getPlayerTwoDeck().contains(finalCheckedOpponentDeck)).count();
+                totalWins = matchupsIncludingDeckName.stream().filter(it ->
+                        it.getWinningDeck().contains(finalCheckedOpponentDeck)).count();
 
 
                 if(!finalCheckedOpponentDeck.equals(deckName)) {
@@ -139,18 +145,20 @@ public class MatchupServiceImpl implements MatchupService {
         return winningPercentageMap;
     }
 
+
+    // @TODO:
     public Map<String, Integer> getTotalMatchesByDeck(String deckName) {
         Map<String, Integer> matchupsCount = new HashMap<>();
         matchupsCount.put(deckName, 0);
 
         List<Matchup> matchupsIncludingDeckName = getAllMatchupsByDeckName(deckName);
-        int numberOfTotalMatchups = (int)matchupsIncludingDeckName.stream().count();
+        int numberOfTotalMatchups = matchupsIncludingDeckName.size();
 
         for(int i = 0; i < numberOfTotalMatchups; i++) {
             if(matchupsIncludingDeckName.get(i).getPlayerOneDeck().equals(matchupsIncludingDeckName.get(i).getPlayerTwoDeck())) {
                 matchupsCount.merge(deckName, 1, Integer::sum);
             }
-            if(matchupsIncludingDeckName.get(i).getPlayerOneDeck() != matchupsIncludingDeckName.get(i).getPlayerTwoDeck()) {
+            if(!matchupsIncludingDeckName.get(i).getPlayerOneDeck().equals(matchupsIncludingDeckName.get(i).getPlayerTwoDeck())) {
                 if(!matchupsIncludingDeckName.get(i).getPlayerOneDeck().contains(deckName)) {
                     matchupsCount.merge(matchupsIncludingDeckName.get(i).getPlayerOneDeck(), 1, Integer::sum);
                 } else if (!matchupsIncludingDeckName.get(i).getPlayerTwoDeck().contains(deckName)) {
@@ -162,11 +170,8 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
 
-    private double calculatePercentage(int numerator, int denominator){
-        double result = ((double)numerator / (double)denominator) * 100;
-        if(result > 0){
-            return result;
-        } else return 0;
+    private double calculatePercentage(long numerator, long denominator){
+        return ((double)numerator / (double)denominator) * 100;
     }
 
 }
