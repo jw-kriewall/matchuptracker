@@ -1,27 +1,59 @@
 package com.example.matchuptracker.service;
 
-import org.junit.Test;
+import com.example.matchuptracker.model.Matchup;
+import com.example.matchuptracker.repository.MatchupRepository;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
 
-@ExtendWith(SpringExtension.class)
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 public class MatchupServiceTest {
 
-//    @Test
-//    public void testWinningPercentageCalculator() {
-//        String deckName = "Deck1";
-//        Map<String, Integer> winningPercentageMap = getMatchupPercentagesByDeckName(deckName);
-//
-//
-//    }
+    @Mock
+    MatchupRepository mockRepository;
 
-//    @Test
-//    public void testCalculatePercentage() {
-//
-//        MatchupServiceImpl service = new MatchupServiceImpl();
-//
-//        assertEquals(expected, actual);
-//    }
+    @InjectMocks
+    MatchupServiceImpl mockService;
+
+    @Test
+    public void testRepository() {
+        Assertions.assertNotNull(mockRepository);
+    }
+
+    @Test
+    public void testGetAllMatchupsByPlayerName() {
+
+        String nameToCheck = "Bob";
+        String dummyName = "dummy";
+
+        List<Matchup> dummyData = new ArrayList<>();
+
+        Matchup dummyMatchup1 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .build();
+
+        Matchup dummyMatchup2 = Matchup.builder()
+                .playerOneName(dummyName)
+                .playerTwoName(nameToCheck)
+                .build();
+
+        dummyData.add(dummyMatchup1);
+        dummyData.add(dummyMatchup2);
+
+        when(mockRepository.findAll()).thenReturn(dummyData);
+
+        Assertions.assertNotNull(mockService.getAllMatchupsByPlayerName(nameToCheck));
+        Assertions.assertEquals(mockService.getAllMatchupsByPlayerName(nameToCheck).size(), 2);
+    }
+
+
 }
