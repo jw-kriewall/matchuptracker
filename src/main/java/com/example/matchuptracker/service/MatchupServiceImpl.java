@@ -25,9 +25,9 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
     @Override
-    public String saveMatchup(Matchup matchup) {
+    public Matchup saveMatchup(Matchup matchup) {
         repository.save(matchup);
-        return null;
+        return matchup;
     }
 
     @Override

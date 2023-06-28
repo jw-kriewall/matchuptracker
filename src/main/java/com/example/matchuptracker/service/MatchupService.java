@@ -8,7 +8,7 @@ import java.util.Map;
 public interface MatchupService {
 
     List<Matchup> getAllMatchups();
-    String saveMatchup(Matchup matchup);
+    Matchup saveMatchup(Matchup matchup);
     Matchup updateMatchup(int id, Matchup matchup);
     Matchup findMatchupById(int id);
     List<Matchup> getAllMatchupsByPlayerName(String name);

@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.mockito.Mockito.when;
+
+// https://www.toptal.com/java/a-guide-to-everyday-mockito
 
 @ExtendWith(MockitoExtension.class)
 public class MatchupServiceTest {
@@ -162,12 +162,40 @@ public class MatchupServiceTest {
         dummyMatchupsCharizard.put(squirtle, 1);
         dummyMatchupsCharizard.put(pikachu, 1);
 
-        System.out.println(mockService.getAllMatchupsByDeckName(charizard));
-
         Assertions.assertNotNull(dummyMatchupsPikachu);
         Assertions.assertNotNull(dummyMatchupsCharizard);
         Assertions.assertEquals(mockService.getTotalMatchesByDeck(charizard), dummyMatchupsCharizard);
         Assertions.assertEquals(mockService.getTotalMatchesByDeck(pikachu), dummyMatchupsPikachu);
     }
+
+    @Test
+    public void testSaveMatchup() {
+        // Act
+        when(mockRepository.save(Mockito.any(Matchup.class))).thenReturn(dummyMatchup1);
+        Matchup savedMatchup = mockService.saveMatchup(dummyMatchup1);
+        // Assert
+        Assertions.assertNotNull(savedMatchup);
+    }
+
+    @Test
+    public void testUpdateMatchup() {
+
+        when(mockRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(dummyMatchup1));
+
+        Matchup matchup = mockService.updateMatchup(1, dummyMatchup2);
+
+        Assertions.assertNotNull(matchup);
+        Assertions.assertEquals(matchup.toString(), dummyMatchup2.toString());
+//        Assertions.assertNotEquals(matchup.toString(), dummyMatchup1.toString());
+    }
+
+    @Test
+    public void testFindMatchupsById() {
+        when(mockRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(dummyMatchup3));
+
+        Assertions.assertNotNull(mockService.findMatchupById(1));
+        Assertions.assertEquals(mockService.findMatchupById(1).toString(), dummyMatchup3.toString());
+    }
+
 
 }
