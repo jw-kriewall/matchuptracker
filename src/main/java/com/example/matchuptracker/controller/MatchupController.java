@@ -20,13 +20,13 @@ public class MatchupController {
     }
 
     @GetMapping("/getAll")
-    public List<Matchup> getAll() {
-        return service.getAllMatchups();
+    public ResponseEntity<List<Matchup>> getAll() {
+        return new ResponseEntity<>(service.getAllMatchups(), HttpStatus.OK);
     }
 
     @PostMapping("/add")
     public ResponseEntity<Matchup> add(@RequestBody Matchup matchup) {
-        return new ResponseEntity<>(service.saveMatchup(matchup), HttpStatus.CREATED);
+        return new ResponseEntity<>(service.saveMatchup(matchup), HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
