@@ -2,6 +2,8 @@ package com.example.matchuptracker.controller;
 
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.service.MatchupService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +25,8 @@ public class MatchupController {
     }
 
     @PostMapping("/add")
-    public String add(@RequestBody Matchup matchup) {
-        service.saveMatchup(matchup);
-        return "Matchup added successfully!";
+    public ResponseEntity<Matchup> add(@RequestBody Matchup matchup) {
+        return new ResponseEntity<>(service.saveMatchup(matchup), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
