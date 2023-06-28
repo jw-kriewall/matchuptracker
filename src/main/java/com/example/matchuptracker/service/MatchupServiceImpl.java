@@ -138,6 +138,107 @@ public class MatchupServiceImpl implements MatchupService {
         return winningPercentageMap;
     }
 
+    @Override
+    public String getOverallRecordByDeckName(String deckName) {
+        return null;
+    }
+
+
+
+    public Map<String, String> getIndividualRecordsByDeckName(String deckName) {
+        // matchup 1 = {playerOneDeck: Pikachu, playerTwoDeck: Squirtle, winningDeck: Pikachu}
+        // matchup 2 = {playerOneDeck: Charizard, playerTwoDeck: Pikachu, winningDeck: Pikachu}
+        // matchup 3 = {playerOneDeck: Squirtle, playerTwoDeck: Pikachu, winningDeck: Squirtle}
+
+        List<Matchup> matchups = getAllMatchupsByDeckName(deckName);
+        Map<String, String> recordMap = new HashMap<>();
+
+        recordMap.put(deckName, getRecordInMirrorMatch(deckName));
+
+        int wins = 0;
+        int losses = 0;
+        int ties = 0;
+
+        for(Matchup matchup : matchups) {
+            if(!recordMap.containsKey(matchup.getPlayerOneDeck())) {
+                // I now have a list of matchups with the passed in deckName.
+                // iterate through and find if playerOneDeck is already named in matchups list.
+                // if not, iterate through matchups to calculate record. && !unrecordedMatchup.getPlayerOneDeck().equals(unrecordedMatchup.getPlayerTwoDeck())
+                // reset record before calculating next.
+                String checkedDeck = matchup.getPlayerOneDeck();
+                for(Matchup unrecordedMatchup : matchups) {
+                    if(unrecordedMatchup.getPlayerOneDeck().equals(checkedDeck) || unrecordedMatchup.getPlayerTwoDeck().equals(checkedDeck)) {
+                        if(unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerOneDeck()) && unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerTwoDeck())) {
+                            ties += 1;
+                        } else if(unrecordedMatchup.getWinningDeck().equals("draw") ||
+                                unrecordedMatchup.getWinningDeck().equals("tie") ||
+                                unrecordedMatchup.getWinningDeck().equals("N/A") ||
+                                unrecordedMatchup.getWinningDeck().equals("none")) {
+                            ties += 1;
+                        } else if(unrecordedMatchup.getWinningDeck().equals(deckName)) {
+                            wins += 1;
+                        } else {
+                            losses += 1;
+                        }
+                    }
+                }
+                recordMap.put(checkedDeck, calculateRecord(wins, losses, ties));
+                wins = 0;
+                losses = 0;
+                ties = 0;
+            } else if (!recordMap.containsKey(matchup.getPlayerTwoDeck())) {
+                String checkedDeck = matchup.getPlayerTwoDeck();
+                for(Matchup unrecordedMatchup : matchups) {
+                    if(unrecordedMatchup.getPlayerOneDeck().equals(checkedDeck) || unrecordedMatchup.getPlayerTwoDeck().equals(checkedDeck)) {
+                        if(unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerOneDeck()) && unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerTwoDeck())) {
+                            ties += 1;
+                        } else if(unrecordedMatchup.getWinningDeck().equals("draw") ||
+                                unrecordedMatchup.getWinningDeck().equals("tie") ||
+                                unrecordedMatchup.getWinningDeck().equals("N/A") ||
+                                unrecordedMatchup.getWinningDeck().equals("none")){
+                            ties += 1;
+                        } else if(unrecordedMatchup.getWinningDeck().equals(deckName)) {
+                            wins += 1;
+                        } else {
+                            losses += 1;
+                        }
+                    }
+                }
+                recordMap.put(checkedDeck, calculateRecord(wins, losses, ties));
+                wins = 0;
+                losses = 0;
+                ties = 0;
+            }
+        }
+
+        return recordMap;
+    }
+
+    @Override
+    public String getRecordInMirrorMatch(String deckName) {
+        List<Matchup> matchups = getAllMatchupsByDeckName(deckName);
+
+        int wins = 0;
+        int losses = 0;
+        int ties = 0;
+
+        for(Matchup matchup : matchups) {
+            String playerOneDeck = matchup.getPlayerOneDeck();
+            String playerTwoDeck = matchup.getPlayerTwoDeck();
+            if(playerOneDeck.equals(playerTwoDeck) && (matchup.getWinningDeck() == deckName)) {
+                wins += 1;
+                losses += 1;
+            } else if(playerOneDeck.equals(playerTwoDeck) && (
+                    matchup.getWinningDeck().equals("draw") ||
+                    matchup.getWinningDeck().equals("tie") ||
+                    matchup.getWinningDeck().equals("N/A") ||
+                    matchup.getWinningDeck().equals("none"))) {
+                ties += 1;
+            }
+        }
+        return calculateRecord(wins, losses, ties);
+    }
+
     public Map<String, Integer> getTotalMatchesByDeck(String deckName) {
         Map<String, Integer> matchupsCount = new HashMap<>();
         matchupsCount.put(deckName, 0);
@@ -164,8 +265,12 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
 
-    private double calculatePercentage(long numerator, long denominator){
+    private double calculatePercentage(long numerator, long denominator) {
         return ((double)numerator / (double)denominator) * 100;
+    }
+
+    private String calculateRecord(int wins, int losses, int draws) {
+        return wins + "-" + losses + "-" + draws;
     }
 
 }

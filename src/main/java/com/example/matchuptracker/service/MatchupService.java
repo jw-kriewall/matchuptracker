@@ -15,5 +15,8 @@ public interface MatchupService {
     List<Matchup> getAllMatchupsByDeckName(String deckName);
     List<Matchup> getAllMatchupsByFormat(String format);
     Map<String, Double> getMatchupPercentagesByDeckName(String deckName);
+    String getOverallRecordByDeckName(String deckName);
+    Map<String, String> getIndividualRecordsByDeckName(String deckName);
+    String getRecordInMirrorMatch(String deckName);
     Map<String, Integer> getTotalMatchesByDeck(String deckName);
 }

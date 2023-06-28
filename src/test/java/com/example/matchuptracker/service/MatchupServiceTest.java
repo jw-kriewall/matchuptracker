@@ -29,6 +29,7 @@ public class MatchupServiceTest {
     String pikachu = "Pikachu";
     String squirtle = "Squirtle";
     String charizard = "Charizard";
+    String bulbasaur = "Bulbasaur";
 
     String nameToCheck = "Bob";
     String format = "Standard";
@@ -197,5 +198,139 @@ public class MatchupServiceTest {
         Assertions.assertEquals(mockService.findMatchupById(1).toString(), dummyMatchup3.toString());
     }
 
+    @Test
+    public void testGetIndividualRecordsByDeckName() {
+        Matchup charizardMatchup1 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(charizard)
+                .playerTwoDeck(charizard)
+                .format(format)
+                .winningDeck(charizard)
+                .build();
+        Matchup charizardMatchup2 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(charizard)
+                .playerTwoDeck(pikachu)
+                .format(format)
+                .winningDeck(charizard)
+                .build();
+        Matchup charizardMatchup3 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(squirtle)
+                .playerTwoDeck(charizard)
+                .format(format)
+                .winningDeck("tie")
+                .build();
+        Matchup charizardMatchup4 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(charizard)
+                .playerTwoDeck(squirtle)
+                .format(format)
+                .winningDeck(squirtle)
+                .build();
+        Matchup charizardMatchup5 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(charizard)
+                .playerTwoDeck(squirtle)
+                .format(format)
+                .winningDeck(charizard)
+                .build();
+        Matchup charizardMatchup6 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(charizard)
+                .playerTwoDeck(charizard)
+                .format(format)
+                .winningDeck("none")
+                .build();
+        Matchup charizardMatchup7 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(charizard)
+                .playerTwoDeck(bulbasaur)
+                .format(format)
+                .winningDeck(bulbasaur)
+                .build();
+        Matchup charizardMatchup8 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(charizard)
+                .playerTwoDeck(pikachu)
+                .format(format)
+                .winningDeck(charizard)
+                .build();
+
+        List<Matchup>charizardDummyData = new ArrayList<>(List.of(
+                charizardMatchup1, charizardMatchup2, charizardMatchup3, charizardMatchup4, charizardMatchup5, charizardMatchup6, charizardMatchup7, charizardMatchup8));
+
+        Map<String, String> expectedRecords = new HashMap<>();
+        expectedRecords.put(charizard, "1-1-1");
+        expectedRecords.put(pikachu, "2-0-0");
+        expectedRecords.put(squirtle, "1-1-1");
+        expectedRecords.put(bulbasaur, "0-1-0");
+
+        when(mockRepository.findAll()).thenReturn(charizardDummyData);
+
+        Assertions.assertNotNull(mockService.getIndividualRecordsByDeckName(charizard));
+        Assertions.assertEquals(expectedRecords, mockService.getIndividualRecordsByDeckName(charizard));
+    }
+
+    @Test
+    public void testGetRecordInMirrorMatch() {
+        Matchup pikachuMatchup1 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(pikachu)
+                .playerTwoDeck(squirtle)
+                .format(format)
+                .winningDeck(pikachu)
+                .build();
+        Matchup pikachuMatchup2 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(squirtle)
+                .playerTwoDeck(squirtle)
+                .format(format)
+                .winningDeck("N/A")
+                .build();
+        Matchup pikachuMatchup3 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(pikachu)
+                .playerTwoDeck(pikachu)
+                .format(format)
+                .winningDeck("tie")
+                .build();
+        Matchup pikachuMatchup4 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(pikachu)
+                .playerTwoDeck(pikachu)
+                .format(format)
+                .winningDeck(pikachu)
+                .build();
+        Matchup pikachuMatchup5 = Matchup.builder()
+                .playerOneName(nameToCheck)
+                .playerTwoName(dummyName)
+                .playerOneDeck(pikachu)
+                .playerTwoDeck(pikachu)
+                .format(format)
+                .winningDeck("none")
+                .build();
+
+        List<Matchup>pikachuDummyData = new ArrayList<>(List.of(pikachuMatchup1, pikachuMatchup2, pikachuMatchup3, pikachuMatchup4, pikachuMatchup5));
+
+        String expectedRecord = "1-1-2";
+
+        when(mockRepository.findAll()).thenReturn(pikachuDummyData);
+
+        Assertions.assertNotNull(mockService.getRecordInMirrorMatch(pikachu));
+        Assertions.assertEquals(expectedRecord, mockService.getRecordInMirrorMatch(pikachu));
+    }
 
 }

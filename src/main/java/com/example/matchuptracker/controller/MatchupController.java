@@ -2,8 +2,6 @@ package com.example.matchuptracker.controller;
 
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.service.MatchupService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,6 +62,11 @@ public class MatchupController {
     @GetMapping("/totalGames/{deckName}")
     public Map<String, Integer> getTotalMatchesByDeck(@PathVariable String deckName) {
         return service.getTotalMatchesByDeck(deckName);
+    }
+
+    @GetMapping("/individual/{deckName}")
+    public Map<String, String> getIndividualRecordsByDeck(@PathVariable String deckName) {
+        return service.getIndividualRecordsByDeckName(deckName);
     }
 
 }
