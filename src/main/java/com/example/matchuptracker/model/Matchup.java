@@ -20,6 +20,7 @@ public class Matchup {
     private String playerTwoName;
     private String playerTwoDeck;
     private String startingPlayer;
+    @NonNull
     private String winningDeck;
     private String format;
     private String notes;

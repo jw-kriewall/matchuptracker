@@ -170,10 +170,7 @@ public class MatchupServiceImpl implements MatchupService {
                     if(unrecordedMatchup.getPlayerOneDeck().equals(checkedDeck) || unrecordedMatchup.getPlayerTwoDeck().equals(checkedDeck)) {
                         if(unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerOneDeck()) && unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerTwoDeck())) {
                             ties += 1;
-                        } else if(unrecordedMatchup.getWinningDeck().equals("draw") ||
-                                unrecordedMatchup.getWinningDeck().equals("tie") ||
-                                unrecordedMatchup.getWinningDeck().equals("N/A") ||
-                                unrecordedMatchup.getWinningDeck().equals("none")) {
+                        } else if(!Objects.equals(unrecordedMatchup.getPlayerOneDeck(), unrecordedMatchup.getWinningDeck()) && !Objects.equals(unrecordedMatchup.getPlayerTwoDeck(), unrecordedMatchup.getWinningDeck())){
                             ties += 1;
                         } else if(unrecordedMatchup.getWinningDeck().equals(deckName)) {
                             wins += 1;
