@@ -66,6 +66,7 @@ class MatchupControllerTest {
                 .content(objectMapper.writeValueAsString(matchups)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk());
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.playerOneDeck", CoreMatchers.containsString(sampleMatchup1.getPlayerOneDeck())));
     }
 
 
@@ -84,7 +85,7 @@ class MatchupControllerTest {
     }
 
     @Test
-    void updateMatchup() {
+    void testUpdateMatchup() {
     }
 
     @Test
