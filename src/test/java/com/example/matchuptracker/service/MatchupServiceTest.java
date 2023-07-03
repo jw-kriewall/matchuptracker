@@ -3,6 +3,7 @@ package com.example.matchuptracker.service;
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.repository.MatchupRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -81,6 +82,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does getAll return all matchups?")
     public void getAllMatchups() {
 
         when(mockRepository.findAll()).thenReturn(dummyData);
@@ -91,6 +93,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does getAllMatchups by Player Name work correctly?")
     public void testGetAllMatchupsByPlayerName() {
         // Arrange, Act, Assert
         when(mockRepository.findAll()).thenReturn(dummyData);
@@ -102,6 +105,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does getAllMatchups by Deck Name work correctly?")
     public void testGetAllMatchupsByDeckName() {
 
         when(mockRepository.findAll()).thenReturn(dummyData);
@@ -112,6 +116,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does getAllMatchups by Format work correctly?")
     public void testGetAllMatchupsByFormat() {
 
         when(mockRepository.findAll()).thenReturn(dummyData);
@@ -122,6 +127,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does getMatchupPercentages by Deck Name work correctly?")
     public void testGetMatchupPercentagesByDeckName() {
 
         Map<String, Double> dummyMatchupsCharizard = new HashMap<>();
@@ -142,6 +148,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does getTotalMatches by Deck work correctly?")
     public void testGetTotalMatchesByDeck() {
 
         when(mockRepository.findAll()).thenReturn(dummyData);
@@ -163,6 +170,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does Save work correctly?")
     public void testSaveMatchup() {
         // Act
         when(mockRepository.save(Mockito.any(Matchup.class))).thenReturn(dummyMatchup1);
@@ -172,6 +180,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does Update work correctly?")
     public void testUpdateMatchup() {
 
         when(mockRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(dummyMatchup1));
@@ -184,6 +193,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does findMatchupsByID work correctly?")
     public void testFindMatchupsById() {
         when(mockRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(dummyMatchup3));
 
@@ -192,6 +202,7 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does getIndividualRecords by DeckName work correctly?")
     public void testGetIndividualRecordsByDeckName() {
         Matchup charizardMatchup1 = Matchup.builder()
                 .playerOneName(NAME_TO_CHECK)
@@ -273,8 +284,8 @@ public class MatchupServiceTest {
         Assertions.assertEquals(expectedRecords, mockService.getIndividualRecordsByDeckName(CHARIZARD));
     }
 
-    @Test
-    public void testGetRecordInMirrorMatch() {
+
+    private void testGetRecordInMirrorMatch() {
         Matchup pikachuMatchup1 = Matchup.builder()
                 .playerOneName(NAME_TO_CHECK)
                 .playerTwoName(DUMMY_NAME)
