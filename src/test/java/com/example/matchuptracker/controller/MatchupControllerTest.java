@@ -99,23 +99,63 @@ class MatchupControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.playerTwoName", CoreMatchers.is(sampleMatchup1.getPlayerTwoName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.format", CoreMatchers.is(sampleMatchup1.getFormat())));
     }
-//
-//    @Test
-//    void getMatchupById() {
-//    }
-//
-//    @Test
-//    void getMatchupByDeckName() {
-//    }
-//
-//    @Test
-//    void getMatchupsByPlayerName() {
-//    }
-//
-//    @Test
-//    void getMatchupsByFormat() {
-//    }
-//
+
+    @Test
+    void getMatchupById() throws Exception {
+        when(mockService.findMatchupById(ArgumentMatchers.anyInt())).thenReturn(sampleMatchup2);
+
+        ResultActions response = mockMvc.perform(get("/matchups/getbymatchid/2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(sampleMatchup2)));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.playerTwoName", CoreMatchers.is(sampleMatchup2.getPlayerTwoName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.winningDeck", CoreMatchers.is(sampleMatchup2.getWinningDeck())));
+
+    }
+
+    @Test
+    void getMatchupByDeckName() throws Exception {
+        List<Matchup> matchups = new ArrayList<>();
+        matchups.add(sampleMatchup2);
+        matchups.add(sampleMatchup1);
+
+        when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
+
+        ResultActions response = mockMvc.perform(get("/matchups/deckName/dummyDeckName"));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .equals(matchups);
+    }
+
+    @Test
+    void getMatchupsByPlayerName() throws Exception {
+        List<Matchup> matchups = new ArrayList<>();
+        matchups.add(sampleMatchup2);
+        matchups.add(sampleMatchup1);
+
+        when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
+
+        ResultActions response = mockMvc.perform(get("/matchups/playerName/dummyName"));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .equals(matchups);
+    }
+
+    @Test
+    void getMatchupsByFormat() throws Exception {
+        List<Matchup> matchups = new ArrayList<>();
+        matchups.add(sampleMatchup2);
+        matchups.add(sampleMatchup1);
+
+        when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
+
+        ResultActions response = mockMvc.perform(get("/matchups/format/dummyName"));
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .equals(matchups);
+    }
+
 //    @Test
 //    void getMatchupPercentagesByDeckName() {
 //    }
