@@ -285,56 +285,56 @@ public class MatchupServiceTest {
     }
 
 
-    private void testGetRecordInMirrorMatch() {
-        Matchup pikachuMatchup1 = Matchup.builder()
-                .playerOneName(NAME_TO_CHECK)
-                .playerTwoName(DUMMY_NAME)
-                .playerOneDeck(PIKACHU)
-                .playerTwoDeck(SQUIRTLE)
-                .format(FORMAT)
-                .winningDeck(PIKACHU)
-                .build();
-        Matchup pikachuMatchup2 = Matchup.builder()
-                .playerOneName(NAME_TO_CHECK)
-                .playerTwoName(DUMMY_NAME)
-                .playerOneDeck(SQUIRTLE)
-                .playerTwoDeck(SQUIRTLE)
-                .format(FORMAT)
-                .winningDeck("N/A")
-                .build();
-        Matchup pikachuMatchup3 = Matchup.builder()
-                .playerOneName(NAME_TO_CHECK)
-                .playerTwoName(DUMMY_NAME)
-                .playerOneDeck(PIKACHU)
-                .playerTwoDeck(PIKACHU)
-                .format(FORMAT)
-                .winningDeck("tie")
-                .build();
-        Matchup pikachuMatchup4 = Matchup.builder()
-                .playerOneName(NAME_TO_CHECK)
-                .playerTwoName(DUMMY_NAME)
-                .playerOneDeck(PIKACHU)
-                .playerTwoDeck(PIKACHU)
-                .format(FORMAT)
-                .winningDeck(PIKACHU)
-                .build();
-        Matchup pikachuMatchup5 = Matchup.builder()
-                .playerOneName(NAME_TO_CHECK)
-                .playerTwoName(DUMMY_NAME)
-                .playerOneDeck(PIKACHU)
-                .playerTwoDeck(PIKACHU)
-                .format(FORMAT)
-                .winningDeck("none")
-                .build();
-
-        List<Matchup>pikachuDummyData = new ArrayList<>(List.of(pikachuMatchup1, pikachuMatchup2, pikachuMatchup3, pikachuMatchup4, pikachuMatchup5));
-
-        String expectedRecord = "1-1-2";
-
-        when(mockRepository.findAll()).thenReturn(pikachuDummyData);
-
-        Assertions.assertNotNull(mockService.getRecordInMirrorMatch(PIKACHU));
-        Assertions.assertEquals(expectedRecord, mockService.getRecordInMirrorMatch(PIKACHU));
-    }
+//    private void testGetRecordInMirrorMatch() {
+//        Matchup pikachuMatchup1 = Matchup.builder()
+//                .playerOneName(NAME_TO_CHECK)
+//                .playerTwoName(DUMMY_NAME)
+//                .playerOneDeck(PIKACHU)
+//                .playerTwoDeck(SQUIRTLE)
+//                .format(FORMAT)
+//                .winningDeck(PIKACHU)
+//                .build();
+//        Matchup pikachuMatchup2 = Matchup.builder()
+//                .playerOneName(NAME_TO_CHECK)
+//                .playerTwoName(DUMMY_NAME)
+//                .playerOneDeck(SQUIRTLE)
+//                .playerTwoDeck(SQUIRTLE)
+//                .format(FORMAT)
+//                .winningDeck("N/A")
+//                .build();
+//        Matchup pikachuMatchup3 = Matchup.builder()
+//                .playerOneName(NAME_TO_CHECK)
+//                .playerTwoName(DUMMY_NAME)
+//                .playerOneDeck(PIKACHU)
+//                .playerTwoDeck(PIKACHU)
+//                .format(FORMAT)
+//                .winningDeck("tie")
+//                .build();
+//        Matchup pikachuMatchup4 = Matchup.builder()
+//                .playerOneName(NAME_TO_CHECK)
+//                .playerTwoName(DUMMY_NAME)
+//                .playerOneDeck(PIKACHU)
+//                .playerTwoDeck(PIKACHU)
+//                .format(FORMAT)
+//                .winningDeck(PIKACHU)
+//                .build();
+//        Matchup pikachuMatchup5 = Matchup.builder()
+//                .playerOneName(NAME_TO_CHECK)
+//                .playerTwoName(DUMMY_NAME)
+//                .playerOneDeck(PIKACHU)
+//                .playerTwoDeck(PIKACHU)
+//                .format(FORMAT)
+//                .winningDeck("none")
+//                .build();
+//
+//        List<Matchup>pikachuDummyData = new ArrayList<>(List.of(pikachuMatchup1, pikachuMatchup2, pikachuMatchup3, pikachuMatchup4, pikachuMatchup5));
+//
+//        String expectedRecord = "1-1-2";
+//
+//        when(mockRepository.findAll()).thenReturn(pikachuDummyData);
+//
+//        Assertions.assertNotNull(mockService.getRecordInMirrorMatch(PIKACHU));
+//        Assertions.assertEquals(expectedRecord, mockService.getRecordInMirrorMatch(PIKACHU));
+//    }
 
 }

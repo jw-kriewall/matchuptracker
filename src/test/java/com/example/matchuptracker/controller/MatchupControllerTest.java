@@ -26,8 +26,7 @@ import static com.example.matchuptracker.utils.Constants.GET_ALL_ENDPOINT;
 import static com.example.matchuptracker.utils.Constants.MATCHUPS_ENDPOINT;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @WebMvcTest(controllers = MatchupController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -87,34 +86,45 @@ class MatchupControllerTest {
     }
 
     @Test
-    void testUpdateMatchup() {
-    }
+    void testUpdateMatchup() throws Exception {
+        // Question -> below test only works if parameters are ArgumentMatchers.any() and not specific parameters (i.e. id = 1, matchup = sampleMatchup1). Why?
+        when(mockService.updateMatchup(ArgumentMatchers.anyInt(), ArgumentMatchers.any())).thenReturn(sampleMatchup1);
 
-    @Test
-    void getMatchupById() {
-    }
+        ResultActions response = mockMvc.perform(put("/matchups/update/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(sampleMatchup1)));
 
-    @Test
-    void getMatchupByDeckName() {
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.playerOneDeck", CoreMatchers.is(sampleMatchup1.getPlayerOneDeck())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.playerTwoName", CoreMatchers.is(sampleMatchup1.getPlayerTwoName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.format", CoreMatchers.is(sampleMatchup1.getFormat())));
     }
-
-    @Test
-    void getMatchupsByPlayerName() {
-    }
-
-    @Test
-    void getMatchupsByFormat() {
-    }
-
-    @Test
-    void getMatchupPercentagesByDeckName() {
-    }
-
-    @Test
-    void getTotalMatchesByDeck() {
-    }
-
-    @Test
-    void getIndividualRecordsByDeck() {
-    }
+//
+//    @Test
+//    void getMatchupById() {
+//    }
+//
+//    @Test
+//    void getMatchupByDeckName() {
+//    }
+//
+//    @Test
+//    void getMatchupsByPlayerName() {
+//    }
+//
+//    @Test
+//    void getMatchupsByFormat() {
+//    }
+//
+//    @Test
+//    void getMatchupPercentagesByDeckName() {
+//    }
+//
+//    @Test
+//    void getTotalMatchesByDeck() {
+//    }
+//
+//    @Test
+//    void getIndividualRecordsByDeck() {
+//    }
 }

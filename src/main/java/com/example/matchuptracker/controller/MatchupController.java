@@ -2,6 +2,7 @@ package com.example.matchuptracker.controller;
 
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.service.MatchupService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/matchups")
+@Slf4j
 public class MatchupController {
 
     private final MatchupService service;
@@ -18,6 +20,9 @@ public class MatchupController {
     public MatchupController(MatchupService service) {
         this.service = service;
     }
+
+    @GetMapping("/")
+    public ResponseEntity<?> mthealth() { return new ResponseEntity<>(HttpStatus.OK); }
 
     @GetMapping("/getAll")
     public ResponseEntity<List<Matchup>> getAll() {
@@ -30,9 +35,10 @@ public class MatchupController {
     }
 
     @PutMapping("/update/{id}")
-    public String updateMatchup(@PathVariable int id, @RequestBody Matchup matchup) {
-        service.updateMatchup(id, matchup);
-        return "Successfully updated the following matchup: " + matchup.toString();
+    public ResponseEntity<Matchup> updateMatchup(@PathVariable int id, @RequestBody Matchup matchup) {
+        log.debug("Successfully updated the following matchup: " + matchup.toString());
+        Matchup response = service.updateMatchup(id, matchup);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/getbymatchid/{id}")

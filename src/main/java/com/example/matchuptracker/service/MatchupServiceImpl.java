@@ -143,8 +143,6 @@ public class MatchupServiceImpl implements MatchupService {
         return null;
     }
 
-
-
     public Map<String, String> getIndividualRecordsByDeckName(String deckName) {
         // matchup 1 = {playerOneDeck: Pikachu, playerTwoDeck: Squirtle, winningDeck: Pikachu}
         // matchup 2 = {playerOneDeck: Charizard, playerTwoDeck: Pikachu, winningDeck: Pikachu}
