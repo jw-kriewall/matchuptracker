@@ -12,16 +12,22 @@ import java.util.stream.Collectors;
 
 @Service
 public class MatchupServiceImpl implements MatchupService {
-    @Autowired
-    private final MatchupRepository repository;
 
-    public MatchupServiceImpl(MatchupRepository repository) {
+    private MatchupRepository repository;
+
+    public MatchupRepository getRepository() {
+//        System.out.println("Repository hit");
+        return repository;
+    }
+
+    @Autowired
+    public void setRepository(MatchupRepository repository) {
         this.repository = repository;
     }
 
     @Override
     public List<Matchup> getAllMatchups() {
-        return repository.findAll();
+        return getRepository().findAll();
     }
 
     @Override
@@ -75,12 +81,10 @@ public class MatchupServiceImpl implements MatchupService {
     // @TODO: Lookup predicates
     @Override
     public List<Matchup> getAllMatchupsByFormat(String format) {
-        List<Matchup> matchupsByFormat = new ArrayList<>();
-        repository.findAll().stream()
+        return repository.findAll().stream()
                 .filter(Objects::nonNull)
                 .filter(matchup -> matchup.getFormat().toLowerCase().contains(format.toLowerCase()))
-                .forEach(matchupsByFormat::add);
-        return matchupsByFormat;
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -257,6 +261,11 @@ public class MatchupServiceImpl implements MatchupService {
             }
         }
         return matchupsCount;
+    }
+
+    @Override
+    public void deleteMatchup(int id) {
+        repository.delete(repository.getReferenceById(id));
     }
 
 

@@ -19,4 +19,5 @@ public interface MatchupService {
     Map<String, String> getIndividualRecordsByDeckName(String deckName);
     String getRecordInMirrorMatch(String deckName);
     Map<String, Integer> getTotalMatchesByDeck(String deckName);
+    void deleteMatchup(int id);
 }
