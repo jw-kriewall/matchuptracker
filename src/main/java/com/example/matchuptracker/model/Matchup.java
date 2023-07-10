@@ -16,7 +16,8 @@ public class Matchup {
     @OneToOne(cascade=CascadeType.ALL)
     private Deck playerOneDeck;
     private String playerTwoName;
-    private String playerTwoDeck;
+    @OneToOne(cascade=CascadeType.ALL)
+    private Deck playerTwoDeck;
     private String startingPlayer;
     @NonNull
     private String winningDeck;
@@ -63,11 +64,11 @@ public class Matchup {
         this.playerTwoName = playerTwo;
     }
 
-    public String getPlayerTwoDeck() {
+    public Deck getPlayerTwoDeck() {
         return playerTwoDeck;
     }
 
-    public void setPlayerTwoDeck(String playerTwoDeck) {
+    public void setPlayerTwoDeck(Deck playerTwoDeck) {
         this.playerTwoDeck = playerTwoDeck;
     }
 

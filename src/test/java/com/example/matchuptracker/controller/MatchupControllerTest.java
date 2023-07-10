@@ -25,7 +25,6 @@ import java.util.List;
 
 import static com.example.matchuptracker.utils.Constants.GET_ALL_ENDPOINT;
 import static com.example.matchuptracker.utils.Constants.MATCHUPS_ENDPOINT;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -49,14 +48,15 @@ class MatchupControllerTest {
 
 //    private Deck sampleDeck1 = Deck.builder().name("DeckName").cards("Cards");
 
-    private Deck sampleDeck1 = Deck.builder().name("Pikachu").cards("Cards").build();
+    private Deck sampleDeckPikachu = Deck.builder().name("Pikachu").cards("Cards").build();
+    private Deck sampleDeckSquirtle = Deck.builder().name("Squirtle").cards("Cards").build();
 
     @BeforeEach
     public void init() {
-        sampleMatchup1 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeck1)
-                .playerTwoDeck("Squirtle").winningDeck("Pikachu").format("Standard").notes("none").build();
-        sampleMatchup2 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeck1)
-                .playerTwoDeck("Pikachu").winningDeck("none").format("Standard").notes("none").build();
+        sampleMatchup1 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeckPikachu)
+                .playerTwoDeck(sampleDeckSquirtle).winningDeck("Pikachu").format("Standard").notes("none").build();
+        sampleMatchup2 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeckPikachu)
+                .playerTwoDeck(sampleDeckSquirtle).winningDeck("none").format("Standard").notes("none").build();
     }
 
     @Test
