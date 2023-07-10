@@ -76,4 +76,9 @@ public class MatchupController {
         return service.getIndividualRecordsByDeckName(deckName);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public void deleteMatchups(@PathVariable int id) {
+        service.deleteMatchup(id);
+    }
+
 }

@@ -74,7 +74,7 @@ public class MatchupServiceImpl implements MatchupService {
     public List<Matchup> getAllMatchupsByDeckName(String deckName) {
         return repository.findAll().stream()
                 .filter(Objects::nonNull)
-                .filter(matchup -> matchup.getPlayerOneDeck().equalsIgnoreCase(deckName) || matchup.getPlayerTwoDeck().equalsIgnoreCase(deckName))
+                .filter(matchup -> matchup.getPlayerOneDeck().getName().equalsIgnoreCase(deckName) || matchup.getPlayerTwoDeck().equalsIgnoreCase(deckName))
                 .collect(Collectors.toList());
     }
 
@@ -111,7 +111,7 @@ public class MatchupServiceImpl implements MatchupService {
             long matchupTotalGames = 0;
             long totalWins = 0;
 
-            String deckOne = matchup.getPlayerOneDeck();
+            String deckOne = matchup.getPlayerOneDeck().getName();
 
             // Pull out deck check logic.
 
@@ -127,7 +127,7 @@ public class MatchupServiceImpl implements MatchupService {
             if(checkedOpponentDeck != ""){
                 String finalCheckedOpponentDeck = checkedOpponentDeck;
                 matchupTotalGames = matchupsIncludingDeckName.stream().filter(it ->
-                        it.getPlayerOneDeck().contains(finalCheckedOpponentDeck)).count() +
+                        it.getPlayerOneDeck().getName().contains(finalCheckedOpponentDeck)).count() +
                         matchupsIncludingDeckName.stream().filter(it ->
                         it.getPlayerTwoDeck().contains(finalCheckedOpponentDeck)).count();
                 totalWins = matchupsIncludingDeckName.stream().filter(it ->
@@ -162,17 +162,17 @@ public class MatchupServiceImpl implements MatchupService {
         int ties = 0;
 
         for(Matchup matchup : matchups) {
-            if(!recordMap.containsKey(matchup.getPlayerOneDeck())) {
+            if(!recordMap.containsKey(matchup.getPlayerOneDeck().getName())) {
                 // I now have a list of matchups with the passed in deckName.
                 // iterate through and find if playerOneDeck is already named in matchups list.
                 // if not, iterate through matchups to calculate record. && !unrecordedMatchup.getPlayerOneDeck().equals(unrecordedMatchup.getPlayerTwoDeck())
                 // reset record before calculating next.
-                String checkedDeck = matchup.getPlayerOneDeck();
+                String checkedDeck = matchup.getPlayerOneDeck().getName();
                 for(Matchup unrecordedMatchup : matchups) {
-                    if(unrecordedMatchup.getPlayerOneDeck().equals(checkedDeck) || unrecordedMatchup.getPlayerTwoDeck().equals(checkedDeck)) {
-                        if(unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerOneDeck()) && unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerTwoDeck())) {
+                    if(unrecordedMatchup.getPlayerOneDeck().getName().equals(checkedDeck) || unrecordedMatchup.getPlayerTwoDeck().equals(checkedDeck)) {
+                        if(unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerOneDeck().getName()) && unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerTwoDeck())) {
                             ties += 1;
-                        } else if(!Objects.equals(unrecordedMatchup.getPlayerOneDeck(), unrecordedMatchup.getWinningDeck()) && !Objects.equals(unrecordedMatchup.getPlayerTwoDeck(), unrecordedMatchup.getWinningDeck())){
+                        } else if(!Objects.equals(unrecordedMatchup.getPlayerOneDeck().getName(), unrecordedMatchup.getWinningDeck()) && !Objects.equals(unrecordedMatchup.getPlayerTwoDeck(), unrecordedMatchup.getWinningDeck())){
                             ties += 1;
                         } else if(unrecordedMatchup.getWinningDeck().equals(deckName)) {
                             wins += 1;
@@ -188,8 +188,8 @@ public class MatchupServiceImpl implements MatchupService {
             } else if (!recordMap.containsKey(matchup.getPlayerTwoDeck())) {
                 String checkedDeck = matchup.getPlayerTwoDeck();
                 for(Matchup unrecordedMatchup : matchups) {
-                    if(unrecordedMatchup.getPlayerOneDeck().equals(checkedDeck) || unrecordedMatchup.getPlayerTwoDeck().equals(checkedDeck)) {
-                        if(unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerOneDeck()) && unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerTwoDeck())) {
+                    if(unrecordedMatchup.getPlayerOneDeck().getName().equals(checkedDeck) || unrecordedMatchup.getPlayerTwoDeck().equals(checkedDeck)) {
+                        if(unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerOneDeck().getName()) && unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerTwoDeck())) {
                             ties += 1;
                         } else if(unrecordedMatchup.getWinningDeck().equals("draw") ||
                                 unrecordedMatchup.getWinningDeck().equals("tie") ||
@@ -222,7 +222,7 @@ public class MatchupServiceImpl implements MatchupService {
         int ties = 0;
 
         for(Matchup matchup : matchups) {
-            String playerOneDeck = matchup.getPlayerOneDeck();
+            String playerOneDeck = matchup.getPlayerOneDeck().getName();
             String playerTwoDeck = matchup.getPlayerTwoDeck();
             if(playerOneDeck.equals(playerTwoDeck) && (matchup.getWinningDeck() == deckName)) {
                 wins += 1;
@@ -246,7 +246,7 @@ public class MatchupServiceImpl implements MatchupService {
 
         for(Matchup matchup : matchupsIncludingDeckName) {
 
-            String deckOne = matchup.getPlayerOneDeck();
+            String deckOne = matchup.getPlayerOneDeck().getName();
             String deckTwo = matchup.getPlayerTwoDeck();
 
             if(deckOne.equals(deckTwo)) {

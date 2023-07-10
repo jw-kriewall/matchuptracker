@@ -1,9 +1,6 @@
 package com.example.matchuptracker.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -16,7 +13,8 @@ public class Matchup {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String playerOneName;
-    private String playerOneDeck;
+    @OneToOne(cascade=CascadeType.ALL)
+    private Deck playerOneDeck;
     private String playerTwoName;
     private String playerTwoDeck;
     private String startingPlayer;
@@ -49,11 +47,11 @@ public class Matchup {
         this.playerOneName = playerOne;
     }
 
-    public String getPlayerOneDeck() {
+    public Deck getPlayerOneDeck() {
         return playerOneDeck;
     }
 
-    public void setPlayerOneDeck(String playerOneDeck) {
+    public void setPlayerOneDeck(Deck playerOneDeck) {
         this.playerOneDeck = playerOneDeck;
     }
 
