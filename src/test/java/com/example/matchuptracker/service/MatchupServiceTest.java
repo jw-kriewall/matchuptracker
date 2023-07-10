@@ -1,6 +1,8 @@
 package com.example.matchuptracker.service;
 
+import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
+import com.example.matchuptracker.model.Trainer;
 import com.example.matchuptracker.repository.MatchupRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -30,10 +32,13 @@ public class MatchupServiceTest {
     @InjectMocks
     MatchupServiceImpl mockService;
 
+    private List<Trainer> trainers = new ArrayList<>();
+    Deck sampleDeck1 = new Deck(trainers, "dummyName");
+
     Matchup dummyMatchup1 = Matchup.builder()
             .playerOneName(NAME_TO_CHECK)
             .playerTwoName(DUMMY_NAME)
-            .playerOneDeck(PIKACHU)
+            .playerOneDeck(sampleDeck1)
             .playerTwoDeck(SQUIRTLE)
             .format(FORMAT)
             .winningDeck(PIKACHU)
@@ -42,7 +47,7 @@ public class MatchupServiceTest {
     Matchup dummyMatchup2 = Matchup.builder()
             .playerOneName(NAME_TO_CHECK)
             .playerTwoName(DUMMY_NAME)
-            .playerOneDeck(SQUIRTLE)
+            .playerOneDeck(sampleDeck1)
             .playerTwoDeck(PIKACHU)
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
@@ -51,7 +56,7 @@ public class MatchupServiceTest {
     Matchup dummyMatchup3 = Matchup.builder()
             .playerOneName(NAME_TO_CHECK)
             .playerTwoName(DUMMY_NAME)
-            .playerOneDeck(CHARIZARD)
+            .playerOneDeck(sampleDeck1)
             .playerTwoDeck(PIKACHU)
             .format(FORMAT)
             .winningDeck(PIKACHU)
@@ -60,7 +65,7 @@ public class MatchupServiceTest {
     Matchup dummyMatchup4 = Matchup.builder()
             .playerOneName(DUMMY_NAME)
             .playerTwoName(NAME_TO_CHECK)
-            .playerOneDeck(CHARIZARD)
+            .playerOneDeck(sampleDeck1)
             .playerTwoDeck(SQUIRTLE)
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
@@ -69,7 +74,7 @@ public class MatchupServiceTest {
     Matchup dummyMatchup5 = Matchup.builder()
             .playerOneName(DUMMY_NAME)
             .playerTwoName(DUMMY_NAME)
-            .playerOneDeck(CHARIZARD)
+            .playerOneDeck(sampleDeck1)
             .playerTwoDeck(SQUIRTLE)
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
@@ -206,14 +211,14 @@ public class MatchupServiceTest {
     @Test
     @DisplayName("Does getIndividualRecords by DeckName work correctly?")
     public void testGetIndividualRecordsByDeckName() {
-        Matchup charizardMatchup1 = getMatchup(CHARIZARD, CHARIZARD, CHARIZARD);
-        Matchup charizardMatchup2 = getMatchup(CHARIZARD, CHARIZARD, PIKACHU);
-        Matchup charizardMatchup3 = getMatchup(SQUIRTLE, "tie", CHARIZARD);
-        Matchup charizardMatchup4 = getMatchup(CHARIZARD, SQUIRTLE, SQUIRTLE);
-        Matchup charizardMatchup5 = getMatchup(CHARIZARD, CHARIZARD, SQUIRTLE);
-        Matchup charizardMatchup6 = getMatchup(CHARIZARD, "none", CHARIZARD);
-        Matchup charizardMatchup7 = getMatchup(CHARIZARD, BULBASAUR, BULBASAUR);
-        Matchup charizardMatchup8 = getMatchup(CHARIZARD, CHARIZARD, PIKACHU);
+        Matchup charizardMatchup1 = getMatchup(sampleDeck1, CHARIZARD, CHARIZARD);
+        Matchup charizardMatchup2 = getMatchup(sampleDeck1, CHARIZARD, PIKACHU);
+        Matchup charizardMatchup3 = getMatchup(sampleDeck1, "tie", CHARIZARD);
+        Matchup charizardMatchup4 = getMatchup(sampleDeck1, SQUIRTLE, SQUIRTLE);
+        Matchup charizardMatchup5 = getMatchup(sampleDeck1, CHARIZARD, SQUIRTLE);
+        Matchup charizardMatchup6 = getMatchup(sampleDeck1, "none", CHARIZARD);
+        Matchup charizardMatchup7 = getMatchup(sampleDeck1, BULBASAUR, BULBASAUR);
+        Matchup charizardMatchup8 = getMatchup(sampleDeck1, CHARIZARD, PIKACHU);
 
         List<Matchup> charizardDummyData = new ArrayList<>(List.of(
                 charizardMatchup1, charizardMatchup2, charizardMatchup3, charizardMatchup4, charizardMatchup5, charizardMatchup6, charizardMatchup7, charizardMatchup8));
@@ -230,7 +235,7 @@ public class MatchupServiceTest {
         Assertions.assertEquals(expectedRecords, mockService.getIndividualRecordsByDeckName(CHARIZARD));
     }
 
-    private Matchup getMatchup(String playerOneDeck, String playerTwoDeck, String winningDeck) {
+    private Matchup getMatchup(Deck playerOneDeck, String playerTwoDeck, String winningDeck) {
         Matchup charizardMatchup8 = Matchup.builder()
                 .playerOneDeck(playerOneDeck)
                 .playerTwoDeck(winningDeck)

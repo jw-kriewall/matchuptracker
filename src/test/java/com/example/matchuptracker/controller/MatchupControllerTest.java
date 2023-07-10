@@ -1,6 +1,8 @@
 package com.example.matchuptracker.controller;
 
+import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
+import com.example.matchuptracker.model.Trainer;
 import com.example.matchuptracker.service.MatchupService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
@@ -42,14 +44,20 @@ class MatchupControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+
+
     private Matchup sampleMatchup1;
     private Matchup sampleMatchup2;
+    private List<Trainer> trainers = new ArrayList<>();
+
+    private Deck sampleDeck1 = new Deck(trainers, "Pikachu");
+
 
     @BeforeEach
     public void init() {
-        sampleMatchup1 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck("Pikachu")
+        sampleMatchup1 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeck1)
                 .playerTwoDeck("Squirtle").winningDeck("Pikachu").format("Standard").notes("none").build();
-        sampleMatchup2 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck("Pikachu")
+        sampleMatchup2 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeck1)
                 .playerTwoDeck("Pikachu").winningDeck("none").format("Standard").notes("none").build();
     }
 
