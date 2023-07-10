@@ -1,5 +1,6 @@
 package com.example.matchuptracker.controller;
 
+import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.service.MatchupService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,12 +46,17 @@ class MatchupControllerTest {
     private Matchup sampleMatchup1;
     private Matchup sampleMatchup2;
 
+//    private Deck sampleDeck1 = Deck.builder().name("DeckName").cards("Cards");
+
+    private Deck sampleDeckPikachu = Deck.builder().name("Pikachu").cards("Cards").build();
+    private Deck sampleDeckSquirtle = Deck.builder().name("Squirtle").cards("Cards").build();
+
     @BeforeEach
     public void init() {
-        sampleMatchup1 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck("Pikachu")
-                .playerTwoDeck("Squirtle").winningDeck("Pikachu").format("Standard").notes("none").build();
-        sampleMatchup2 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck("Pikachu")
-                .playerTwoDeck("Pikachu").winningDeck("none").format("Standard").notes("none").build();
+        sampleMatchup1 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeckPikachu)
+                .playerTwoDeck(sampleDeckSquirtle).winningDeck("Pikachu").format("Standard").notes("none").build();
+        sampleMatchup2 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeckPikachu)
+                .playerTwoDeck(sampleDeckSquirtle).winningDeck("none").format("Standard").notes("none").build();
     }
 
     @Test
@@ -81,7 +87,7 @@ class MatchupControllerTest {
                 .content(objectMapper.writeValueAsString(sampleMatchup1)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.playerOneDeck", CoreMatchers.is(sampleMatchup1.getPlayerOneDeck())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.playerOneDeck.name", CoreMatchers.is(sampleMatchup1.getPlayerOneDeck().getName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.format", CoreMatchers.is(sampleMatchup1.getFormat())));
     }
 
@@ -95,7 +101,7 @@ class MatchupControllerTest {
                 .content(objectMapper.writeValueAsString(sampleMatchup1)));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.playerOneDeck", CoreMatchers.is(sampleMatchup1.getPlayerOneDeck())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.playerOneDeck.name", CoreMatchers.is(sampleMatchup1.getPlayerOneDeck().getName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.playerTwoName", CoreMatchers.is(sampleMatchup1.getPlayerTwoName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.format", CoreMatchers.is(sampleMatchup1.getFormat())));
     }

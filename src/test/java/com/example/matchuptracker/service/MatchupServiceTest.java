@@ -1,5 +1,6 @@
 package com.example.matchuptracker.service;
 
+import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.repository.MatchupRepository;
 import org.junit.jupiter.api.Assertions;
@@ -14,8 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.*;
 
 import static com.example.matchuptracker.utils.Constants.*;
-import static com.example.matchuptracker.utils.Constants.PIKACHU;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 // https://www.toptal.com/java/a-guide-to-everyday-mockito
@@ -29,12 +28,16 @@ public class MatchupServiceTest {
 
     @InjectMocks
     MatchupServiceImpl mockService;
+    private Deck sampleDeckPikachu = Deck.builder().name("Pikachu").cards("Cards").build();
+    private Deck sampleDeckSquirtle = Deck.builder().name("Squirtle").cards("Cards").build();
+    private Deck sampleDeckCharizard = Deck.builder().name("Charizard").cards("Cards").build();
+    private Deck sampleDeckBulbasaur = Deck.builder().name("Bulbasaur").cards("Cards").build();
 
     Matchup dummyMatchup1 = Matchup.builder()
             .playerOneName(NAME_TO_CHECK)
             .playerTwoName(DUMMY_NAME)
-            .playerOneDeck(PIKACHU)
-            .playerTwoDeck(SQUIRTLE)
+            .playerOneDeck(sampleDeckPikachu)
+            .playerTwoDeck(sampleDeckSquirtle)
             .format(FORMAT)
             .winningDeck(PIKACHU)
             .build();
@@ -42,8 +45,8 @@ public class MatchupServiceTest {
     Matchup dummyMatchup2 = Matchup.builder()
             .playerOneName(NAME_TO_CHECK)
             .playerTwoName(DUMMY_NAME)
-            .playerOneDeck(SQUIRTLE)
-            .playerTwoDeck(PIKACHU)
+            .playerOneDeck(sampleDeckSquirtle)
+            .playerTwoDeck(sampleDeckPikachu)
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
             .build();
@@ -51,8 +54,8 @@ public class MatchupServiceTest {
     Matchup dummyMatchup3 = Matchup.builder()
             .playerOneName(NAME_TO_CHECK)
             .playerTwoName(DUMMY_NAME)
-            .playerOneDeck(CHARIZARD)
-            .playerTwoDeck(PIKACHU)
+            .playerOneDeck(sampleDeckCharizard)
+            .playerTwoDeck(sampleDeckPikachu)
             .format(FORMAT)
             .winningDeck(PIKACHU)
             .build();
@@ -60,8 +63,8 @@ public class MatchupServiceTest {
     Matchup dummyMatchup4 = Matchup.builder()
             .playerOneName(DUMMY_NAME)
             .playerTwoName(NAME_TO_CHECK)
-            .playerOneDeck(CHARIZARD)
-            .playerTwoDeck(SQUIRTLE)
+            .playerOneDeck(sampleDeckCharizard)
+            .playerTwoDeck(sampleDeckSquirtle)
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
             .build();
@@ -69,8 +72,8 @@ public class MatchupServiceTest {
     Matchup dummyMatchup5 = Matchup.builder()
             .playerOneName(DUMMY_NAME)
             .playerTwoName(DUMMY_NAME)
-            .playerOneDeck(CHARIZARD)
-            .playerTwoDeck(SQUIRTLE)
+            .playerOneDeck(sampleDeckCharizard)
+            .playerTwoDeck(sampleDeckSquirtle)
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
             .build();
@@ -206,22 +209,22 @@ public class MatchupServiceTest {
     @Test
     @DisplayName("Does getIndividualRecords by DeckName work correctly?")
     public void testGetIndividualRecordsByDeckName() {
-        Matchup charizardMatchup1 = getMatchup(CHARIZARD, CHARIZARD, CHARIZARD);
-        Matchup charizardMatchup2 = getMatchup(CHARIZARD, CHARIZARD, PIKACHU);
-        Matchup charizardMatchup3 = getMatchup(SQUIRTLE, "tie", CHARIZARD);
-        Matchup charizardMatchup4 = getMatchup(CHARIZARD, SQUIRTLE, SQUIRTLE);
-        Matchup charizardMatchup5 = getMatchup(CHARIZARD, CHARIZARD, SQUIRTLE);
-        Matchup charizardMatchup6 = getMatchup(CHARIZARD, "none", CHARIZARD);
-        Matchup charizardMatchup7 = getMatchup(CHARIZARD, BULBASAUR, BULBASAUR);
-        Matchup charizardMatchup8 = getMatchup(CHARIZARD, CHARIZARD, PIKACHU);
+        Matchup charizardMatchup1 = getMatchup(sampleDeckCharizard, sampleDeckCharizard, CHARIZARD);
+        Matchup charizardMatchup2 = getMatchup(sampleDeckPikachu, sampleDeckCharizard, PIKACHU);
+        Matchup charizardMatchup3 = getMatchup(sampleDeckSquirtle, sampleDeckCharizard, "tie");
+        Matchup charizardMatchup4 = getMatchup(sampleDeckCharizard, sampleDeckSquirtle, SQUIRTLE);
+        Matchup charizardMatchup5 = getMatchup(sampleDeckSquirtle, sampleDeckCharizard, SQUIRTLE);
+        Matchup charizardMatchup6 = getMatchup(sampleDeckCharizard, sampleDeckCharizard, "none");
+        Matchup charizardMatchup7 = getMatchup(sampleDeckCharizard, sampleDeckBulbasaur, BULBASAUR);
+        Matchup charizardMatchup8 = getMatchup(sampleDeckCharizard, sampleDeckPikachu, CHARIZARD);
 
         List<Matchup> charizardDummyData = new ArrayList<>(List.of(
                 charizardMatchup1, charizardMatchup2, charizardMatchup3, charizardMatchup4, charizardMatchup5, charizardMatchup6, charizardMatchup7, charizardMatchup8));
 
         Map<String, String> expectedRecords = new HashMap<>();
         expectedRecords.put(CHARIZARD, "1-1-1");
-        expectedRecords.put(PIKACHU, "2-0-0");
-        expectedRecords.put(SQUIRTLE, "1-1-1");
+        expectedRecords.put(PIKACHU, "1-1-0");
+        expectedRecords.put(SQUIRTLE, "0-2-1");
         expectedRecords.put(BULBASAUR, "0-1-0");
 
         when(mockRepository.findAll()).thenReturn(charizardDummyData);
@@ -230,11 +233,11 @@ public class MatchupServiceTest {
         Assertions.assertEquals(expectedRecords, mockService.getIndividualRecordsByDeckName(CHARIZARD));
     }
 
-    private Matchup getMatchup(String playerOneDeck, String playerTwoDeck, String winningDeck) {
+    private Matchup getMatchup(Deck playerOneDeck, Deck playerTwoDeck, String winningDeck) {
         Matchup charizardMatchup8 = Matchup.builder()
                 .playerOneDeck(playerOneDeck)
-                .playerTwoDeck(winningDeck)
-                .winningDeck(playerTwoDeck)
+                .playerTwoDeck(playerTwoDeck)
+                .winningDeck(winningDeck)
                 .build();
         return charizardMatchup8;
     }
