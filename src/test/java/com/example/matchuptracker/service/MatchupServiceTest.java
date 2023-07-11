@@ -28,10 +28,11 @@ public class MatchupServiceTest {
 
     @InjectMocks
     MatchupServiceImpl mockService;
-    private Deck sampleDeckPikachu = Deck.builder().name("Pikachu").cards("Cards").build();
-    private Deck sampleDeckSquirtle = Deck.builder().name("Squirtle").cards("Cards").build();
-    private Deck sampleDeckCharizard = Deck.builder().name("Charizard").cards("Cards").build();
-    private Deck sampleDeckBulbasaur = Deck.builder().name("Bulbasaur").cards("Cards").build();
+    private Deck sampleDeckPikachu = Deck.builder().name(PIKACHU).cards("Cards").build();
+    private Deck sampleDeckSquirtle = Deck.builder().name(SQUIRTLE).cards("Cards").build();
+    private Deck sampleDeckCharizard = Deck.builder().name(CHARIZARD).cards("Cards").build();
+    private Deck sampleDeckBulbasaur = Deck.builder().name(BULBASAUR).cards("Cards").build();
+    private Deck sampleDeckPidgey = Deck.builder().name(PIDGEY).cards("Cards").build();
 
     Matchup dummyMatchup1 = Matchup.builder()
             .playerOneName(NAME_TO_CHECK)
@@ -223,15 +224,17 @@ public class MatchupServiceTest {
         Matchup charizardMatchup6 = getMatchup(sampleDeckCharizard, sampleDeckCharizard, "none");
         Matchup charizardMatchup7 = getMatchup(sampleDeckCharizard, sampleDeckBulbasaur, BULBASAUR);
         Matchup charizardMatchup8 = getMatchup(sampleDeckCharizard, sampleDeckPikachu, CHARIZARD);
+        Matchup charizardMatchup9 = getMatchup(sampleDeckCharizard, sampleDeckPidgey, CHARIZARD);
 
         List<Matchup> charizardDummyData = new ArrayList<>(List.of(
-                charizardMatchup1, charizardMatchup2, charizardMatchup3, charizardMatchup4, charizardMatchup5, charizardMatchup6, charizardMatchup7, charizardMatchup8));
+                charizardMatchup1, charizardMatchup2, charizardMatchup3, charizardMatchup4, charizardMatchup5, charizardMatchup6, charizardMatchup7, charizardMatchup8, charizardMatchup9));
 
         Map<String, String> expectedRecords = new HashMap<>();
         expectedRecords.put(CHARIZARD, "1-1-1");
         expectedRecords.put(PIKACHU, "1-1-0");
         expectedRecords.put(SQUIRTLE, "0-2-1");
         expectedRecords.put(BULBASAUR, "0-1-0");
+        expectedRecords.put(PIDGEY, "1-0-0");
 
         when(mockRepository.findAll()).thenReturn(charizardDummyData);
 

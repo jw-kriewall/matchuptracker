@@ -12,6 +12,7 @@ public class Constants {
     public static final String SQUIRTLE = "Squirtle";
     public static final String CHARIZARD = "Charizard";
     public static final String BULBASAUR = "Bulbasaur";
+    public static final String PIDGEY = "Pidgey";
 
     public static final String NAME_TO_CHECK = "Bob";
     public static final String FORMAT = "Standard";
