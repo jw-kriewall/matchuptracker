@@ -170,9 +170,7 @@ public class MatchupServiceImpl implements MatchupService {
                 String checkedDeck = matchup.getPlayerOneDeck().getName();
                 for(Matchup unrecordedMatchup : matchups) {
                     if(unrecordedMatchup.getPlayerOneDeck().getName().equals(checkedDeck) || unrecordedMatchup.getPlayerTwoDeck().getName().equals(checkedDeck)) {
-                        if(unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerOneDeck().getName()) && unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerTwoDeck())) {
-                            ties += 1;
-                        } else if(!Objects.equals(unrecordedMatchup.getPlayerOneDeck().getName(), unrecordedMatchup.getWinningDeck()) && !Objects.equals(unrecordedMatchup.getPlayerTwoDeck().getName(), unrecordedMatchup.getWinningDeck())){
+                        if(!Objects.equals(unrecordedMatchup.getPlayerOneDeck().getName(), unrecordedMatchup.getWinningDeck()) && !Objects.equals(unrecordedMatchup.getPlayerTwoDeck().getName(), unrecordedMatchup.getWinningDeck())){
                             ties += 1;
                         } else if(unrecordedMatchup.getWinningDeck().equals(deckName)) {
                             wins += 1;
@@ -189,12 +187,7 @@ public class MatchupServiceImpl implements MatchupService {
                 String checkedDeck = matchup.getPlayerTwoDeck().getName();
                 for(Matchup unrecordedMatchup : matchups) {
                     if(unrecordedMatchup.getPlayerOneDeck().getName().equals(checkedDeck) || unrecordedMatchup.getPlayerTwoDeck().getName().equals(checkedDeck)) {
-                        if(unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerOneDeck().getName()) && unrecordedMatchup.getWinningDeck().equals(unrecordedMatchup.getPlayerTwoDeck())) {
-                            ties += 1;
-                        } else if(unrecordedMatchup.getWinningDeck().equals("draw") ||
-                                unrecordedMatchup.getWinningDeck().equals("tie") ||
-                                unrecordedMatchup.getWinningDeck().equals("N/A") ||
-                                unrecordedMatchup.getWinningDeck().equals("none")){
+                        if(!Objects.equals(unrecordedMatchup.getPlayerOneDeck().getName(), unrecordedMatchup.getWinningDeck()) && !Objects.equals(unrecordedMatchup.getPlayerTwoDeck().getName(), unrecordedMatchup.getWinningDeck())){
                             ties += 1;
                         } else if(unrecordedMatchup.getWinningDeck().equals(deckName)) {
                             wins += 1;
