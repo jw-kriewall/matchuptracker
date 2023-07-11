@@ -227,7 +227,7 @@ public class MatchupServiceImpl implements MatchupService {
             if(playerOneDeck.equals(playerTwoDeck) && (Objects.equals(matchup.getWinningDeck(), deckName))) {
                 wins += 1;
                 losses += 1;
-            } else if(playerOneDeck.equals(playerTwoDeck) || (
+            } else if(playerOneDeck.equals(playerTwoDeck) && (
                     matchup.getWinningDeck().equals("draw") ||
                     matchup.getWinningDeck().equals("tie") ||
                     matchup.getWinningDeck().equals("N/A") ||
