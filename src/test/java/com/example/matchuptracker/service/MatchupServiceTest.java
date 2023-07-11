@@ -198,6 +198,12 @@ public class MatchupServiceTest {
     }
 
     @Test
+    @DisplayName("Does Delete work correctly?")
+    public void testDeleteMatchup() {
+        Assertions.assertAll(() -> mockService.deleteMatchup(1));
+    }
+
+    @Test
     @DisplayName("Does findMatchupsByID work correctly?")
     public void testFindMatchupsById() {
         when(mockRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(dummyMatchup3));
