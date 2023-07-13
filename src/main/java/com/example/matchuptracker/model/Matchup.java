@@ -3,6 +3,8 @@ package com.example.matchuptracker.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +25,25 @@ public class Matchup {
     private String winningDeck;
     private String format;
     private String notes;
+    private Date createdOn;
+    @ManyToOne(cascade=CascadeType.ALL)
+    private User createdBy;
+
+    public Date getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(Date createdOn) {
+        this.createdOn = createdOn;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public String getNotes() {
         return notes;
