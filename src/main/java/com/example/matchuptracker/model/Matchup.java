@@ -26,6 +26,7 @@ public class Matchup {
     private String format;
     private String notes;
     private Date createdOn;
+    @ManyToOne(cascade=CascadeType.ALL)
     private User createdBy;
 
     public Date getCreatedOn() {
