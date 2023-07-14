@@ -114,19 +114,17 @@ public class MatchupServiceImpl implements MatchupService {
             long totalWins = 0;
 
             String deckOne = matchup.getPlayerOneDeck().getName();
+            String deckTwo = matchup.getPlayerTwoDeck().getName();
 
-            // Pull out deck check logic.
-
-            // Setting deck to filter by
             if(!winningPercentageMap.containsKey(deckOne) &&
                 !deckOne.contentEquals(deckName)) {
                 checkedOpponentDeck = deckOne;
-            } else if (!winningPercentageMap.containsKey(matchup.getPlayerTwoDeck()) &&
-                    !matchup.getPlayerTwoDeck().getName().contentEquals(deckName)) {
-                checkedOpponentDeck = matchup.getPlayerTwoDeck().getName();
+            } else if (!winningPercentageMap.containsKey(deckTwo) &&
+                    !deckTwo.contentEquals(deckName)) {
+                checkedOpponentDeck = deckTwo;
             }
 
-            if(checkedOpponentDeck != ""){
+            if(!checkedOpponentDeck.equals("")){
                 String finalCheckedOpponentDeck = checkedOpponentDeck;
                 matchupTotalGames = matchupsIncludingDeckName.stream().filter(it ->
                         it.getPlayerOneDeck().getName().contains(finalCheckedOpponentDeck)).count() +
