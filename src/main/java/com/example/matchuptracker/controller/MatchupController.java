@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/matchups")
+@CrossOrigin
 @Slf4j
 public class MatchupController {
 
