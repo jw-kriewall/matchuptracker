@@ -50,7 +50,8 @@ public class MatchupServiceImpl implements MatchupService {
         existingMatchup.setStartingPlayer(matchup.getStartingPlayer());
         existingMatchup.setWinningDeck(matchup.getWinningDeck());
         existingMatchup.setFormat(matchup.getFormat());
-
+        existingMatchup.setCreatedOn(matchup.getCreatedOn());
+        existingMatchup.setCreatedBy(matchup.getCreatedBy());
         repository.save(existingMatchup);
         return existingMatchup;
     }
