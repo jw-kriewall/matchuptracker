@@ -71,15 +71,15 @@ public class MatchupServiceTest {
             .build();
 
     Matchup dummyMatchup5 = Matchup.builder()
-            .playerOneName(DUMMY_NAME)
+            .playerOneName(NAME_TO_CHECK)
             .playerTwoName(DUMMY_NAME)
             .playerOneDeck(sampleDeckCharizard)
-            .playerTwoDeck(sampleDeckSquirtle)
+            .playerTwoDeck(sampleDeckCharizard)
             .format(FORMAT)
-            .winningDeck(SQUIRTLE)
+            .winningDeck(CHARIZARD)
             .build();
 
-    List<Matchup> dummyData = new ArrayList<>(List.of(dummyMatchup1, dummyMatchup2, dummyMatchup3, dummyMatchup4));
+    List<Matchup> dummyData = new ArrayList<>(List.of(dummyMatchup1, dummyMatchup2, dummyMatchup3, dummyMatchup4, dummyMatchup5));
 
 
     @Test
@@ -165,7 +165,7 @@ public class MatchupServiceTest {
         dummyMatchupsPikachu.put(CHARIZARD, 1);
 
         Map<String, Integer> dummyMatchupsCharizard = new HashMap<>();
-        dummyMatchupsCharizard.put(CHARIZARD, 0);
+        dummyMatchupsCharizard.put(CHARIZARD, 1);
         dummyMatchupsCharizard.put(SQUIRTLE, 1);
         dummyMatchupsCharizard.put(PIKACHU, 1);
 
