@@ -80,7 +80,7 @@ class MatchupControllerTest {
     void testAddMatchup() throws Exception {
         given(mockService.saveMatchup(ArgumentMatchers.any())).willAnswer((invocation -> invocation.getArgument(0)));
 
-        ResultActions response = mockMvc.perform(post(MatchupController.MATCHUPS + "/add")
+        ResultActions response = mockMvc.perform(post(MatchupController.MATCHUPS + MatchupController.ENDPOINT_ADD)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(sampleMatchup1)));
 
@@ -94,7 +94,7 @@ class MatchupControllerTest {
         // Question -> below test only works if parameters are ArgumentMatchers.any() and not specific parameters (i.e. id = 1, matchup = sampleMatchup1). Why?
         when(mockService.updateMatchup(ArgumentMatchers.anyInt(), ArgumentMatchers.any())).thenReturn(sampleMatchup1);
 
-        ResultActions response = mockMvc.perform(put("/matchups/update/1")
+        ResultActions response = mockMvc.perform(put(MatchupController.MATCHUPS + MatchupController.ENDPOINT_UPDATE + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(sampleMatchup1)));
 
@@ -108,7 +108,7 @@ class MatchupControllerTest {
     void getMatchupById() throws Exception {
         when(mockService.findMatchupById(ArgumentMatchers.anyInt())).thenReturn(sampleMatchup2);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + "/getbymatchid/2")
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_ID + "/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(sampleMatchup2)));
 
@@ -126,7 +126,7 @@ class MatchupControllerTest {
 
         when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + "/deckName/dummyDeckName"));
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/dummyDeckName"));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .equals(matchups);
@@ -140,7 +140,7 @@ class MatchupControllerTest {
 
         when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + "/playerName/dummyName"));
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_USERNAME + "/dummyName"));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .equals(matchups);
@@ -154,7 +154,7 @@ class MatchupControllerTest {
 
         when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + "/format/dummyName"));
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_MATCHUPS_BY_FORMAT + "/dummyName"));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .equals(matchups);
