@@ -20,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String username;
-    private String name;
+    private String email;
     @OneToMany
     private List<Deck> decks;
     private String role;
