@@ -1,10 +1,8 @@
 package com.example.matchuptracker.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
@@ -16,7 +14,9 @@ public class Deck {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
+    @JsonProperty("name")
     private String name;
+    @JsonProperty("cards")
     private String cards;
 
     public String getName() {

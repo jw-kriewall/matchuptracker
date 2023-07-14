@@ -14,6 +14,7 @@ import java.util.Map;
 @RequestMapping("/matchups")
 @CrossOrigin
 @Slf4j
+@CrossOrigin
 public class MatchupController {
 
     private final MatchupService service;
