@@ -1,15 +1,13 @@
 package com.example.matchuptracker.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,5 +21,7 @@ public class User {
     private UUID id;
     private String username;
     private String name;
-    private Date accountCreatedOn;
+    @OneToMany
+    private List<Deck> decks;
+    private String role;
 }

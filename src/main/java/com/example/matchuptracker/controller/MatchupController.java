@@ -10,12 +10,25 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.matchuptracker.controller.MatchupController.MATCHUPS;
+
 @RestController
-@RequestMapping("/matchups")
+@RequestMapping(MATCHUPS)
 @Slf4j
 @CrossOrigin
 public class MatchupController {
 
+    public static final String MATCHUPS = "/matchups";
+    public static final String ENDPOINT_GET_ALL = "/getAll";
+    public static final String ENDPOINT_ADD = "/add";
+    public static final String ENDPOINT_UPDATE = "/update";
+    public static final String ENDPOINT_GET_MATCHUP_BY_ID = "/getbymatchid";
+    public static final String ENDPOINT_GET_MATCHUP_BY_DECKNAME = "/deckName";
+    public static final String ENDPOINT_GET_MATCHUP_BY_USERNAME = "/playerName";
+    public static final String ENDPOINT_MATCHUPS_BY_FORMAT = "/format";
+    public static final String ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME = "/percentages";
+    public static final String ENDPOINT_MATCHUPS_INDIVIDUAL_RECORDS = "/individual";
+    public static final String ENDPOINT_DELETE = "/delete";
     private final MatchupService service;
 
     public MatchupController(MatchupService service) {
@@ -25,44 +38,44 @@ public class MatchupController {
     @GetMapping("/")
     public ResponseEntity<?> mthealth() { return new ResponseEntity<>(HttpStatus.OK); }
 
-    @GetMapping("/getAll")
+    @GetMapping(ENDPOINT_GET_ALL)
     public ResponseEntity<List<Matchup>> getAll() {
         return new ResponseEntity<>(service.getAllMatchups(), HttpStatus.OK);
     }
 
-    @PostMapping("/add")
+    @PostMapping(ENDPOINT_ADD)
     public ResponseEntity<Matchup> add(@RequestBody Matchup matchup) {
         return new ResponseEntity<>(service.saveMatchup(matchup), HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping(ENDPOINT_UPDATE + "/{id}")
     public ResponseEntity<Matchup> updateMatchup(@PathVariable int id, @RequestBody Matchup matchup) {
         log.debug("Successfully updated the following matchup: " + matchup.toString());
         Matchup response = service.updateMatchup(id, matchup);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/getbymatchid/{id}")
+    @GetMapping(ENDPOINT_GET_MATCHUP_BY_ID + "/{id}")
     public Matchup getMatchupById(@PathVariable int id) {
         return service.findMatchupById(id);
     }
 
-    @GetMapping("/deckName/{deckName}")
+    @GetMapping(ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/{deckName}")
     public List<Matchup> getMatchupByDeckName(@PathVariable String deckName) {
         return service.getAllMatchupsByDeckName(deckName);
     }
 
-    @GetMapping("/playerName/{playerName}")
+    @GetMapping(ENDPOINT_GET_MATCHUP_BY_USERNAME + "/{playerName}")
     public List<Matchup> getMatchupsByPlayerName(@PathVariable String playerName) {
         return service.getAllMatchupsByPlayerName(playerName);
     }
 
-    @GetMapping("/format/{format}")
+    @GetMapping(ENDPOINT_MATCHUPS_BY_FORMAT + "/{format}")
     public List<Matchup> getMatchupsByFormat(@PathVariable String format) {
         return service.getAllMatchupsByFormat(format);
     }
 
-    @GetMapping("/percentages/{deckName}")
+    @GetMapping(ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME + "/{deckName}")
     public Map<String, Double> getMatchupPercentagesByDeckName(@PathVariable String deckName) {
         return service.getMatchupPercentagesByDeckName(deckName);
     }
@@ -72,12 +85,12 @@ public class MatchupController {
         return service.getTotalMatchesByDeck(deckName);
     }
 
-    @GetMapping("/individual/{deckName}")
+    @GetMapping(ENDPOINT_MATCHUPS_INDIVIDUAL_RECORDS + "/{deckName}")
     public Map<String, String> getIndividualRecordsByDeck(@PathVariable String deckName) {
         return service.getIndividualRecordsByDeckName(deckName);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping(ENDPOINT_DELETE + "/{id}")
     public void deleteMatchups(@PathVariable int id) {
         service.deleteMatchup(id);
     }

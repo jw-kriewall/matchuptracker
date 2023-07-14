@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 
-import static com.example.matchuptracker.utils.Constants.*;
+import static utils.Constants.*;
 import static org.mockito.Mockito.when;
 
 // https://www.toptal.com/java/a-guide-to-everyday-mockito

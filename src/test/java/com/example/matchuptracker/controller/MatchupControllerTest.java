@@ -23,8 +23,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.matchuptracker.utils.Constants.GET_ALL_ENDPOINT;
-import static com.example.matchuptracker.utils.Constants.MATCHUPS_ENDPOINT;
+import static utils.Constants.GET_ALL_ENDPOINT;
+import static utils.Constants.MATCHUPS_ENDPOINT;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -68,7 +68,7 @@ class MatchupControllerTest {
 
         when(mockService.getAllMatchups()).thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(MATCHUPS_ENDPOINT + GET_ALL_ENDPOINT)
+        ResultActions response = mockMvc.perform(get(MATCHUPS_ENDPOINT + MatchupController.ENDPOINT_GET_ALL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(matchups)));
 
