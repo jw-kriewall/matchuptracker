@@ -20,4 +20,5 @@ public interface MatchupService {
     String getRecordInMirrorMatch(String deckName);
     Map<String, Integer> getTotalMatchesByDeck(String deckName);
     void deleteMatchup(int id);
+    // @TODO: Get matchups by UserID - modify getAllMatchupsByPlayerName to be by playerID
 }
