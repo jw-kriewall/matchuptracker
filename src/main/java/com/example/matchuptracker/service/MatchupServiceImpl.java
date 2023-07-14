@@ -49,6 +49,8 @@ public class MatchupServiceImpl implements MatchupService {
         existingMatchup.setPlayerTwoDeck(matchup.getPlayerTwoDeck());
         existingMatchup.setStartingPlayer(matchup.getStartingPlayer());
         existingMatchup.setWinningDeck(matchup.getWinningDeck());
+        existingMatchup.setCreatedBy(matchup.getCreatedBy());
+        existingMatchup.setCreatedOn(matchup.getCreatedOn());
         existingMatchup.setFormat(matchup.getFormat());
 
         repository.save(existingMatchup);
@@ -109,23 +111,21 @@ public class MatchupServiceImpl implements MatchupService {
         for(Matchup matchup : matchupsIncludingDeckName) {
 
             String checkedOpponentDeck = "";
-            long matchupTotalGames = 0;
-            long totalWins = 0;
+            long matchupTotalGames;
+            long totalWins;
 
             String deckOne = matchup.getPlayerOneDeck().getName();
+            String deckTwo = matchup.getPlayerTwoDeck().getName();
 
-            // Pull out deck check logic.
-
-            // Setting deck to filter by
             if(!winningPercentageMap.containsKey(deckOne) &&
                 !deckOne.contentEquals(deckName)) {
                 checkedOpponentDeck = deckOne;
-            } else if (!winningPercentageMap.containsKey(matchup.getPlayerTwoDeck()) &&
-                    !matchup.getPlayerTwoDeck().getName().contentEquals(deckName)) {
-                checkedOpponentDeck = matchup.getPlayerTwoDeck().getName();
+            } else if (!winningPercentageMap.containsKey(deckTwo) &&
+                    !deckTwo.contentEquals(deckName)) {
+                checkedOpponentDeck = deckTwo;
             }
 
-            if(checkedOpponentDeck != ""){
+            if(!Objects.equals(checkedOpponentDeck, "")){
                 String finalCheckedOpponentDeck = checkedOpponentDeck;
                 matchupTotalGames = matchupsIncludingDeckName.stream().filter(it ->
                         it.getPlayerOneDeck().getName().contains(finalCheckedOpponentDeck)).count() +
