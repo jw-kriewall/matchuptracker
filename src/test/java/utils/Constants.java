@@ -1,4 +1,4 @@
-package com.example.matchuptracker.utils;
+package utils;
 
 public class Constants {
 
