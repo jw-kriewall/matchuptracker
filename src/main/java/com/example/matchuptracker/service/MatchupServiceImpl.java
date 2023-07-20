@@ -4,6 +4,7 @@ import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.repository.MatchupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public class MatchupServiceImpl implements MatchupService {
 
     @Override
     public List<Matchup> getAllMatchups() {
-        return getRepository().findAll();
+        return getRepository().findAll(Sort.by(Sort.Direction.DESC, "createdOn"));
     }
 
     @Override
