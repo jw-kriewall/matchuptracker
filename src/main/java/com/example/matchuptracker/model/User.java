@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +21,8 @@ public class User {
     private UUID id;
     @JsonProperty("username")
     private String username;
+    @JsonProperty("password")
+    private String password;
     @JsonProperty("email")
     private String email;
     @OneToMany
