@@ -21,10 +21,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static utils.Constants.GET_ALL_ENDPOINT;
-import static utils.Constants.MATCHUPS_ENDPOINT;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,6 +43,8 @@ class MatchupControllerTest {
     private MatchupService mockService;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private MatchupController mockController;
 
     private Matchup sampleMatchup1;
     private Matchup sampleMatchup2;
@@ -156,14 +159,29 @@ class MatchupControllerTest {
 
         when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(
-                MatchupController.MATCHUPS +
-                        MatchupController.ENDPOINT_MATCHUPS_BY_FORMAT +
-                        "/dummyName"));
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_MATCHUPS_BY_FORMAT + "/dummyName"));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .equals(matchups);
     }
+
+    @Test
+    public void testGetMatchupPercentagesByDeckName() {
+        // Arrange
+        String deckName = "testDeck";
+        Map<String, Double> expectedResult = new HashMap<>();
+        expectedResult.put("matchup1", 0.5);
+        expectedResult.put("matchup2", 0.75);
+        expectedResult.put("matchup3", 1.0);
+        when(mockService.getMatchupPercentagesByDeckName(deckName)).thenReturn(expectedResult);
+
+        // Act
+        Map<String, Double> response = mockController.getMatchupPercentagesByDeckName(deckName);
+
+        // Assert
+        assertEquals(expectedResult, response);
+    }
+
 
 //    @Test
 //    void getMatchupPercentagesByDeckName() {

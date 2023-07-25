@@ -1,12 +1,12 @@
 package com.example.matchuptracker.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,9 +19,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+    @JsonProperty("username")
     private String username;
-    private String name;
+    @JsonProperty("password")
+    private String password;
+    @JsonProperty("email")
+    private String email;
     @OneToMany
     private List<Deck> decks;
+    @JsonProperty("role")
     private String role;
 }

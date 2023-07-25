@@ -4,6 +4,7 @@ import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.repository.MatchupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,7 @@ public class MatchupServiceImpl implements MatchupService {
 
     @Override
     public List<Matchup> getAllMatchups() {
-        return getRepository().findAll();
+        return getRepository().findAll(Sort.by(Sort.Direction.DESC, "createdOn"));
     }
 
     @Override
@@ -49,10 +50,9 @@ public class MatchupServiceImpl implements MatchupService {
         existingMatchup.setPlayerTwoDeck(matchup.getPlayerTwoDeck());
         existingMatchup.setStartingPlayer(matchup.getStartingPlayer());
         existingMatchup.setWinningDeck(matchup.getWinningDeck());
-        existingMatchup.setCreatedBy(matchup.getCreatedBy());
-        existingMatchup.setCreatedOn(matchup.getCreatedOn());
         existingMatchup.setFormat(matchup.getFormat());
-
+        existingMatchup.setCreatedOn(matchup.getCreatedOn());
+        existingMatchup.setCreatedBy(matchup.getCreatedBy());
         repository.save(existingMatchup);
         return existingMatchup;
     }
@@ -111,21 +111,24 @@ public class MatchupServiceImpl implements MatchupService {
         for(Matchup matchup : matchupsIncludingDeckName) {
 
             String checkedOpponentDeck = "";
-            long matchupTotalGames;
-            long totalWins;
+            long matchupTotalGames = 0;
+            long totalWins = 0;
 
             String deckOne = matchup.getPlayerOneDeck().getName();
             String deckTwo = matchup.getPlayerTwoDeck().getName();
 
+            // Pull out deck check logic.
+
+            // Setting deck to filter by
             if(!winningPercentageMap.containsKey(deckOne) &&
                 !deckOne.contentEquals(deckName)) {
                 checkedOpponentDeck = deckOne;
-            } else if (!winningPercentageMap.containsKey(deckTwo) &&
-                    !deckTwo.contentEquals(deckName)) {
-                checkedOpponentDeck = deckTwo;
+            } else if (!winningPercentageMap.containsKey(matchup.getPlayerTwoDeck()) &&
+                    !matchup.getPlayerTwoDeck().getName().contentEquals(deckName)) {
+                checkedOpponentDeck = matchup.getPlayerTwoDeck().getName();
             }
 
-            if(!Objects.equals(checkedOpponentDeck, "")){
+            if(!checkedOpponentDeck.equals("")){
                 String finalCheckedOpponentDeck = checkedOpponentDeck;
                 matchupTotalGames = matchupsIncludingDeckName.stream().filter(it ->
                         it.getPlayerOneDeck().getName().contains(finalCheckedOpponentDeck)).count() +
@@ -201,10 +204,8 @@ public class MatchupServiceImpl implements MatchupService {
                 wins++;
                 losses++;
             } else if(playerOneDeck.equals(playerTwoDeck) && (
-                    matchup.getWinningDeck().equals("draw") ||
-                    matchup.getWinningDeck().equals("tie") ||
-                    matchup.getWinningDeck().equals("N/A") ||
-                    matchup.getWinningDeck().equals("none"))) {
+                    !matchup.getWinningDeck().equals(playerOneDeck)) &&
+                    !matchup.getWinningDeck().equals(playerTwoDeck)) {
                 ties++;
             }
         }

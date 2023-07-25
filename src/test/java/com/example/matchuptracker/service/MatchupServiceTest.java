@@ -11,11 +11,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.util.*;
 
-import static utils.Constants.*;
 import static org.mockito.Mockito.when;
+import static utils.Constants.*;
 
 // https://www.toptal.com/java/a-guide-to-everyday-mockito
 
@@ -34,6 +35,8 @@ public class MatchupServiceTest {
     private Deck sampleDeckBulbasaur = Deck.builder().name(BULBASAUR).cards("Cards").build();
     private Deck sampleDeckPidgey = Deck.builder().name(PIDGEY).cards("Cards").build();
 
+    Date date = new Date();
+
     Matchup dummyMatchup1 = Matchup.builder()
             .playerOneName(NAME_TO_CHECK)
             .playerTwoName(DUMMY_NAME)
@@ -41,6 +44,7 @@ public class MatchupServiceTest {
             .playerTwoDeck(sampleDeckSquirtle)
             .format(FORMAT)
             .winningDeck(PIKACHU)
+            .createdOn(date)
             .build();
 
     Matchup dummyMatchup2 = Matchup.builder()
@@ -50,6 +54,7 @@ public class MatchupServiceTest {
             .playerTwoDeck(sampleDeckPikachu)
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
+            .createdOn(date)
             .build();
 
     Matchup dummyMatchup3 = Matchup.builder()
@@ -59,6 +64,7 @@ public class MatchupServiceTest {
             .playerTwoDeck(sampleDeckPikachu)
             .format(FORMAT)
             .winningDeck(PIKACHU)
+            .createdOn(date)
             .build();
 
     Matchup dummyMatchup4 = Matchup.builder()
@@ -68,15 +74,17 @@ public class MatchupServiceTest {
             .playerTwoDeck(sampleDeckSquirtle)
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
+            .createdOn(date)
             .build();
 
     Matchup dummyMatchup5 = Matchup.builder()
-            .playerOneName(DUMMY_NAME)
-            .playerTwoName(NAME_TO_CHECK)
+            .playerOneName(NAME_TO_CHECK)
+            .playerTwoName(DUMMY_NAME)
             .playerOneDeck(sampleDeckCharizard)
             .playerTwoDeck(sampleDeckCharizard)
             .format(FORMAT)
             .winningDeck(CHARIZARD)
+            .createdOn(date)
             .build();
 
     List<Matchup> dummyData = new ArrayList<>(List.of(dummyMatchup1, dummyMatchup2, dummyMatchup3, dummyMatchup4, dummyMatchup5));
@@ -91,11 +99,11 @@ public class MatchupServiceTest {
     @DisplayName("Does getAll return all matchups?")
     public void getAllMatchups() {
 
-        when(mockRepository.findAll()).thenReturn(dummyData);
+        when(mockRepository.findAll(Sort.by(Sort.Direction.DESC, "createdOn"))).thenReturn(dummyData);
 
         Assertions.assertNotNull(mockService.getAllMatchups());
-        Assertions.assertEquals(mockService.getAllMatchups().size(), dummyData.size());
-        Assertions.assertEquals(mockService.getAllMatchups(), dummyData);
+        Assertions.assertEquals(dummyData.size(), mockService.getAllMatchups().size());
+        Assertions.assertEquals(dummyData, mockService.getAllMatchups());
     }
 
     @Test
