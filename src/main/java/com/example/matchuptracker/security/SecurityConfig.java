@@ -14,13 +14,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf()
-                .disable()
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/matchups/**").permitAll();
+                    auth.requestMatchers("/matchups/**").authenticated();
                     auth.requestMatchers("/secure").authenticated();
                 })
-                .oauth2Login();
+                .oauth2ResourceServer()
+                .jwt();
         return http.build();
     }
 }
