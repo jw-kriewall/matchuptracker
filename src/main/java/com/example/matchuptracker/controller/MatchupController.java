@@ -15,7 +15,7 @@ import static com.example.matchuptracker.controller.MatchupController.MATCHUPS;
 @RestController
 @RequestMapping(MATCHUPS)
 @Slf4j
-@CrossOrigin
+@CrossOrigin(exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
 public class MatchupController {
 
     public static final String MATCHUPS = "/matchups";
