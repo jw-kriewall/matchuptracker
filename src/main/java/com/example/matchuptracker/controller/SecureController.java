@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/secure")
 @Slf4j
-@CrossOrigin
+@CrossOrigin("*")
 public class SecureController {
 
     @GetMapping

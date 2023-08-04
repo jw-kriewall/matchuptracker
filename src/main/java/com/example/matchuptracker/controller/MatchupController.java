@@ -5,6 +5,7 @@ import com.example.matchuptracker.service.MatchupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +16,8 @@ import static com.example.matchuptracker.controller.MatchupController.MATCHUPS;
 @RestController
 @RequestMapping(MATCHUPS)
 @Slf4j
-@CrossOrigin(exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
+//@CrossOrigin(exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
+@CrossOrigin("*")
 public class MatchupController {
 
     public static final String MATCHUPS = "/matchups";
@@ -39,7 +41,7 @@ public class MatchupController {
     public ResponseEntity<?> mthealth() { return new ResponseEntity<>(HttpStatus.OK); }
 
     @GetMapping(ENDPOINT_GET_ALL)
-    public ResponseEntity<List<Matchup>> getAll() {
+    public ResponseEntity<List<Matchup>> getAll(Authentication authToken) {
         return new ResponseEntity<>(service.getAllMatchups(), HttpStatus.OK);
     }
 
