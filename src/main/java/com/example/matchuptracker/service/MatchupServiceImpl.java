@@ -81,21 +81,14 @@ public class MatchupServiceImpl implements MatchupService {
                 .collect(Collectors.toList());
     }
 
-    // @TODO: Lookup predicates
     @Override
     public List<Matchup> getAllMatchupsByFormat(String format) {
-        return repository.findAll().stream()
-                .filter(Objects::nonNull)
-                .filter(matchup -> matchup.getFormat().toLowerCase().contains(format.toLowerCase()))
-                .collect(Collectors.toList());
+        return repository.findByFormat(format);
     }
 
     @Override
     public List<Matchup> getAllMatchupsByPlayerEmail(String email) {
-        return repository.findAll().stream()
-                .filter(Objects::nonNull)
-                .filter(matchup -> matchup.getCreatedBy().getEmail().contains(email.toLowerCase()))
-                .collect(Collectors.toList());
+        return repository.findByCreatedByEmail(email);
     }
 
     @Override

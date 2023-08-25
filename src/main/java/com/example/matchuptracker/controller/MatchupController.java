@@ -1,11 +1,20 @@
 package com.example.matchuptracker.controller;
 
 import com.example.matchuptracker.model.Matchup;
+import com.example.matchuptracker.model.User;
 import com.example.matchuptracker.service.MatchupService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,11 +55,9 @@ public class MatchupController {
     }
 
     @GetMapping(ENDPOINT_GET_ALL + "Matchups")
-    public ResponseEntity<List<Matchup>> getAllByEmail(Authentication authToken) {
-        // getAll implies get all by User (email?)
-        // take passed in token, parse out from JWT the user's email
-        // take user email and run through getAllMatchupsByEmail(email)
-        String email = "Parse Auth Token";
+    public ResponseEntity<List<Matchup>> getAllByEmail(Authentication authToken) throws JsonProcessingException {
+        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
+        String email = jwtAuthentication.getTokenAttributes().get("email").toString();
         return new ResponseEntity<>(service.getAllMatchupsByPlayerEmail(email), HttpStatus.OK);
     }
 
@@ -72,7 +79,9 @@ public class MatchupController {
     }
 
     @GetMapping(ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/{deckName}")
-    public List<Matchup> getMatchupByDeckName(@PathVariable String deckName) {
+    public List<Matchup> getMatchupByDeckName(@PathVariable String deckName, Authentication authToken) {
+        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
+        String email = jwtAuthentication.getTokenAttributes().get("email").toString();
         return service.getAllMatchupsByDeckName(deckName);
     }
 
