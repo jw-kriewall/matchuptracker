@@ -45,6 +45,15 @@ public class MatchupController {
         return new ResponseEntity<>(service.getAllMatchups(), HttpStatus.OK);
     }
 
+    @GetMapping(ENDPOINT_GET_ALL + "Matchups")
+    public ResponseEntity<List<Matchup>> getAllByEmail(Authentication authToken) {
+        // getAll implies get all by User (email?)
+        // take passed in token, parse out from JWT the user's email
+        // take user email and run through getAllMatchupsByEmail(email)
+        String email = "Parse Auth Token";
+        return new ResponseEntity<>(service.getAllMatchupsByPlayerEmail(email), HttpStatus.OK);
+    }
+
     @PostMapping(ENDPOINT_ADD)
     public ResponseEntity<Matchup> add(@RequestBody Matchup matchup) {
         return new ResponseEntity<>(service.saveMatchup(matchup), HttpStatus.OK);

@@ -91,6 +91,14 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
     @Override
+    public List<Matchup> getAllMatchupsByPlayerEmail(String email) {
+        return repository.findAll().stream()
+                .filter(Objects::nonNull)
+                .filter(matchup -> matchup.getCreatedBy().getEmail().contains(email.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Map<String, Double> getMatchupPercentagesByDeckName(String deckName) {
 
         Map<String, Double> winningPercentageMap = new HashMap<>();
