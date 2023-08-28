@@ -88,7 +88,8 @@ public class MatchupServiceImpl implements MatchupService {
 
     @Override
     public List<Matchup> getAllMatchupsByPlayerEmail(String email) {
-        return repository.findByCreatedByEmail(email);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
+        return repository.findByCreatedByEmail(email, sort);
     }
 
     @Override
