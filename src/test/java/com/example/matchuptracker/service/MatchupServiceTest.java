@@ -133,7 +133,7 @@ public class MatchupServiceTest {
     @DisplayName("Does getAllMatchups by Format work correctly?")
     public void testGetAllMatchupsByFormat() {
 
-        when(mockRepository.findAll()).thenReturn(dummyData);
+        when(mockRepository.findByFormat(FORMAT)).thenReturn(dummyData);
 
         Assertions.assertNotNull(mockService.getAllMatchupsByFormat(FORMAT));
         Assertions.assertEquals(mockService.getAllMatchupsByFormat(FORMAT).size(), dummyData.size());
