@@ -1,19 +1,12 @@
 package com.example.matchuptracker.controller;
 
 import com.example.matchuptracker.model.Matchup;
-import com.example.matchuptracker.model.User;
 import com.example.matchuptracker.service.MatchupService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +24,7 @@ public class MatchupController {
 
     public static final String MATCHUPS = "/matchups";
     public static final String ENDPOINT_GET_ALL = "/getAll";
+    public static final String ENDPOINT_GET_ALL_MATCHUPS = "/getAllMatchups";
     public static final String ENDPOINT_ADD = "/add";
     public static final String ENDPOINT_UPDATE = "/update";
     public static final String ENDPOINT_GET_MATCHUP_BY_ID = "/getbymatchid";
@@ -49,12 +43,12 @@ public class MatchupController {
     @GetMapping("/")
     public ResponseEntity<?> mthealth() { return new ResponseEntity<>(HttpStatus.OK); }
 
-    @GetMapping(ENDPOINT_GET_ALL)
+    @GetMapping(ENDPOINT_GET_ALL_MATCHUPS)
     public ResponseEntity<List<Matchup>> getAll(Authentication authToken) {
         return new ResponseEntity<>(service.getAllMatchups(), HttpStatus.OK);
     }
 
-    @GetMapping(ENDPOINT_GET_ALL + "Matchups")
+    @GetMapping(ENDPOINT_GET_ALL)
     public ResponseEntity<List<Matchup>> getAllByEmail(Authentication authToken) throws JsonProcessingException {
         JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
         String email = jwtAuthentication.getTokenAttributes().get("email").toString();

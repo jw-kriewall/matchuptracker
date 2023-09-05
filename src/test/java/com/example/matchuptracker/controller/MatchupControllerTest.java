@@ -69,7 +69,18 @@ class MatchupControllerTest {
         matchups.add(sampleMatchup1);
         matchups.add(sampleMatchup2);
 
-        when(mockService.getAllMatchups()).thenReturn(matchups);
+        String token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImMzYWZlN2E5YmRhNDZiYWU2ZWY5N2U0NmM5NWNkYTQ4OTEyZTU5NzkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI5NDYxNzE0MjczOTEtOXExbGtuYTFpYnBncTQ5ZzJmaXZsOG0yZWRnNjMwNGEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI5NDYxNzE0MjczOTEtOXExbGtuYTFpYnBncTQ5ZzJmaXZsOG0yZWRnNjMwNGEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDc0Njc5MDUzNjk1MDQwODM5NTMiLCJlbWFpbCI6Imp3a3JpZXdhbGxAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5iZiI6MTY5MzIzMTA0NSwibmFtZSI6IkpXIEtyaWV3YWxsIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBY0hUdGZ4NEctTjdid3dqLV9GSms3TmFRV3R1aVBxekllajlwQ2tlMUJQdm9Nd25HZz1zOTYtYyIsImdpdmVuX25hbWUiOiJKVyIsImZhbWlseV9uYW1lIjoiS3JpZXdhbGwiLCJsb2NhbGUiOiJlbiIsImlhdCI6MTY5MzIzMTM0NSwiZXhwIjoxNjkzMjM0OTQ1LCJqdGkiOiI0NDE1NjY1ZGVhM2EzMWQwYTQ0NjkwZjBhNDM4NTFlMjZiM2U0ZTRkIn0.b5wMCDskPe98tKlq6kHZUjHSIEbcX8l7Piv5Mb8Qdkxn4Hz5a01tc75-JzJaMAXfw4588G-t7S84yu7o65zD0icO2E-fKI_a-zDRGIAWkLYljMX4B8oyiQffptnBHxMbv-0cRfuFzNvqRfU2xb4NIpeRIHIJZ4xQSwglRZwYaojpYDAoBxRPLaLGVowb3WJiqJFht2zNUx_ZUe-FMiAsWAE2IL2-Nswye5BiuG2r_yvEh_myXi2WhlAmlrY4la9pjJG2SMaaVWBkeUMn2X7bmuuFyiGt5QI01IIanv2GEhq1kI6EzztTQ28LHQUGpeANOr3LbxqIXFhH5qdptIsBQQ";
+
+
+
+//
+//        when(JwtAuthenticationToken.getTokenAttributes((JwtAuthenticationToken) jsonToken).thenReturn();
+//
+//
+//        when(mockService.getAllMatchups()).thenReturn(matchups);
+//        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
+//
+//        when()
 
         ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_ALL)
                 .contentType(MediaType.APPLICATION_JSON)
