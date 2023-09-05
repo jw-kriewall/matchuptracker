@@ -88,7 +88,8 @@ public class MatchupServiceImpl implements MatchupService {
 
     @Override
     public List<Matchup> getAllMatchupsByPlayerEmail(String email) {
-        return repository.findByCreatedByEmail(email);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
+        return repository.findByCreatedByEmail(email, sort);
     }
 
     @Override
@@ -118,12 +119,15 @@ public class MatchupServiceImpl implements MatchupService {
             String deckOne = matchup.getPlayerOneDeck().getName();
             String deckTwo = matchup.getPlayerTwoDeck().getName();
 
+            // Pull out deck check logic.
+
+            // Setting deck to filter by
             if(!winningPercentageMap.containsKey(deckOne) &&
                 !deckOne.contentEquals(deckName)) {
                 checkedOpponentDeck = deckOne;
-            } else if (!winningPercentageMap.containsKey(deckTwo) &&
-                    !deckTwo.contentEquals(deckName)) {
-                checkedOpponentDeck = deckTwo;
+            } else if (!winningPercentageMap.containsKey(matchup.getPlayerTwoDeck()) &&
+                    !matchup.getPlayerTwoDeck().getName().contentEquals(deckName)) {
+                checkedOpponentDeck = matchup.getPlayerTwoDeck().getName();
             }
 
             if(!checkedOpponentDeck.equals("")){
