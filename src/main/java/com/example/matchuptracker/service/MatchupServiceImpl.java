@@ -161,7 +161,7 @@ public class MatchupServiceImpl implements MatchupService {
         List<Matchup> matchups = getAllMatchupsByDeckName(deckName);
         Map<String, String> recordMap = new HashMap<>();
 
-        recordMap.put(deckName, getRecordInMirrorMatch(deckName));
+        recordMap.put(deckName, getRecordInMirrorMatch(deckName, matchups));
 
         for(Matchup matchup : matchups) {
             if(!recordMap.containsKey(matchup.getPlayerOneDeck().getName())) {
@@ -192,10 +192,7 @@ public class MatchupServiceImpl implements MatchupService {
         recordMap.put(checkedDeck, calculateRecord(wins, losses, ties));
     }
 
-    @Override
-    public String getRecordInMirrorMatch(String deckName) {
-        List<Matchup> matchups = getAllMatchupsByDeckName(deckName);
-
+    public String getRecordInMirrorMatch(String deckName, List<Matchup> matchups) {
         int wins = 0;
         int losses = 0;
         int ties = 0;
