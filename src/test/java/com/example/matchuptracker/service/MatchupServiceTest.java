@@ -246,8 +246,8 @@ public class MatchupServiceTest {
 
         when(mockRepository.findAll()).thenReturn(charizardDummyData);
 
-        Assertions.assertNotNull(mockService.getIndividualRecordsByDeckName(CHARIZARD));
-        Assertions.assertEquals(expectedRecords, mockService.getIndividualRecordsByDeckName(CHARIZARD));
+        Assertions.assertNotNull(mockService.getIndividualRecordsByDeckName(CHARIZARD, charizardDummyData));
+        Assertions.assertEquals(expectedRecords, mockService.getIndividualRecordsByDeckName(CHARIZARD, charizardDummyData));
     }
 
     private Matchup getMatchup(Deck playerOneDeck, Deck playerTwoDeck, String winningDeck) {

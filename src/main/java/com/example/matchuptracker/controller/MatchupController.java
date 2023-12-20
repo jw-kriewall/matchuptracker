@@ -103,10 +103,10 @@ public class MatchupController {
         return service.getTotalMatchesByDeck(deckName);
     }
 
-    @GetMapping(ENDPOINT_MATCHUPS_INDIVIDUAL_RECORDS + "/{deckName}")
-    public Map<String, String> getIndividualRecordsByDeck(@PathVariable String deckName) {
-        return service.getIndividualRecordsByDeckName(deckName);
-    }
+//    @GetMapping(ENDPOINT_MATCHUPS_INDIVIDUAL_RECORDS + "/{deckName}")
+//    public Map<String, String> getIndividualRecordsByDeck(@PathVariable String deckName) {
+//        return service.getIndividualRecordsByDeckName(deckName);
+//    }
 
     @GetMapping(ENDPOINT_GET_ALL_MATCHUP_RECORDS)
     public Map<String, Map<String, String>> getAllMatchupRecords() {

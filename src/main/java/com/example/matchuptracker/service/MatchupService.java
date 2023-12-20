@@ -17,7 +17,7 @@ public interface MatchupService {
     List<Matchup> getAllMatchupsByPlayerEmail(String email);
     Map<String, Double> getMatchupPercentagesByDeckName(String deckName);
     String getOverallRecordByDeckName(String deckName);
-    Map<String, String> getIndividualRecordsByDeckName(String deckName);
+//    Map<String, String> getIndividualRecordsByDeckName(String deckName);
     Map<String, Integer> getTotalMatchesByDeck(String deckName);
     Map<String, Map<String, String>> getAllMatchupRecords();
     void deleteMatchup(int id);

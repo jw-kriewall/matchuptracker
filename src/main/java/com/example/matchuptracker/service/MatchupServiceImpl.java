@@ -154,11 +154,12 @@ public class MatchupServiceImpl implements MatchupService {
         return null;
     }
 
-    public Map<String, String> getIndividualRecordsByDeckName(String deckName) {
+    public Map<String, String> getIndividualRecordsByDeckName(String deckName, List<Matchup> matchups) {
         // matchup 1 = {playerOneDeck: Pikachu, playerTwoDeck: Squirtle, winningDeck: Pikachu}
         // matchup 2 = {playerOneDeck: Charizard, playerTwoDeck: Pikachu, winningDeck: Pikachu}
         // matchup 3 = {playerOneDeck: Squirtle, playerTwoDeck: Pikachu, winningDeck: Squirtle}
-        List<Matchup> matchups = getAllMatchupsByDeckName(deckName);
+
+//        List<Matchup> matchups = getAllMatchupsByDeckName(deckName);
         Map<String, String> recordMap = new HashMap<>();
 
         recordMap.put(deckName, getRecordInMirrorMatch(deckName, matchups));
@@ -248,10 +249,13 @@ public class MatchupServiceImpl implements MatchupService {
                 .filter(name -> !name.isBlank() && !name.isEmpty())
                 .collect(Collectors.toSet());
 
+
+
         // this works but needs to be optimized - it is making individual data calls for every deck.
         // Consider extracting this to a separate method.
         for (String deckName : uniqueDeckNames) {
-            allMatchupRecords.put(deckName, getIndividualRecordsByDeckName(deckName));
+            List<Matchup> allMatchupsWithDeckName = allMatchups.stream().filter(matchup -> matchup.getPlayerOneDeck().getName().equals(deckName) || matchup.getPlayerTwoDeck().getName().equals(deckName)).collect(Collectors.toList());
+            allMatchupRecords.put(deckName, getIndividualRecordsByDeckName(deckName, allMatchupsWithDeckName));
         }
         return allMatchupRecords;
     }
