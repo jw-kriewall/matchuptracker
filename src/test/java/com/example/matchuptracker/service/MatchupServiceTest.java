@@ -2,6 +2,7 @@ package com.example.matchuptracker.service;
 
 import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
+import com.example.matchuptracker.model.User;
 import com.example.matchuptracker.repository.MatchupRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -34,6 +35,7 @@ public class MatchupServiceTest {
     private Deck sampleDeckCharizard = Deck.builder().name(CHARIZARD).cards("Cards").build();
     private Deck sampleDeckBulbasaur = Deck.builder().name(BULBASAUR).cards("Cards").build();
     private Deck sampleDeckPidgey = Deck.builder().name(PIDGEY).cards("Cards").build();
+    private User dummyUser = User.builder().username("123@gmail.com").build();
 
     Date date = new Date();
 
@@ -45,6 +47,7 @@ public class MatchupServiceTest {
             .format(FORMAT)
             .winningDeck(PIKACHU)
             .createdOn(date)
+            .createdBy(dummyUser)
             .build();
 
     Matchup dummyMatchup2 = Matchup.builder()
@@ -55,6 +58,7 @@ public class MatchupServiceTest {
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
             .createdOn(date)
+            .createdBy(dummyUser)
             .build();
 
     Matchup dummyMatchup3 = Matchup.builder()
@@ -65,6 +69,7 @@ public class MatchupServiceTest {
             .format(FORMAT)
             .winningDeck(PIKACHU)
             .createdOn(date)
+            .createdBy(dummyUser)
             .build();
 
     Matchup dummyMatchup4 = Matchup.builder()
@@ -75,6 +80,7 @@ public class MatchupServiceTest {
             .format(FORMAT)
             .winningDeck(SQUIRTLE)
             .createdOn(date)
+            .createdBy(dummyUser)
             .build();
 
     Matchup dummyMatchup5 = Matchup.builder()
@@ -85,6 +91,7 @@ public class MatchupServiceTest {
             .format(FORMAT)
             .winningDeck(CHARIZARD)
             .createdOn(date)
+            .createdBy(dummyUser)
             .build();
 
     List<Matchup> dummyData = new ArrayList<>(List.of(dummyMatchup1, dummyMatchup2, dummyMatchup3, dummyMatchup4, dummyMatchup5));
@@ -124,9 +131,9 @@ public class MatchupServiceTest {
 
         when(mockRepository.findAll()).thenReturn(dummyData);
 
-        Assertions.assertNotNull(mockService.getAllMatchupsByDeckName(PIKACHU));
-        Assertions.assertEquals(mockService.getAllMatchupsByDeckName(PIKACHU).size(), 3);
-        Assertions.assertEquals(mockService.getAllMatchupsByDeckName(DUMMY_NAME).size(), 0);
+        Assertions.assertNotNull(mockService.getAllMatchupsByDeckName(dummyUser.getEmail(), PIKACHU));
+        Assertions.assertEquals(mockService.getAllMatchupsByDeckName(dummyUser.getEmail(), PIKACHU).size(), 3);
+        Assertions.assertEquals(mockService.getAllMatchupsByDeckName(dummyUser.getEmail(), DUMMY_NAME).size(), 0);
     }
 
     @Test
@@ -154,11 +161,11 @@ public class MatchupServiceTest {
 
         when(mockRepository.findAll()).thenReturn(dummyData);
 
-        Assertions.assertNotNull(mockService.getMatchupPercentagesByDeckName(CHARIZARD));
-        Assertions.assertNotNull(mockService.getMatchupPercentagesByDeckName(PIKACHU));
-        Assertions.assertNotNull(mockService.getAllMatchupsByDeckName(SQUIRTLE));
+        Assertions.assertNotNull(mockService.getMatchupPercentagesByDeckName(dummyUser.getEmail(), CHARIZARD));
+        Assertions.assertNotNull(mockService.getMatchupPercentagesByDeckName(dummyUser.getEmail(), PIKACHU));
+        Assertions.assertNotNull(mockService.getAllMatchupsByDeckName(dummyUser.getEmail(), SQUIRTLE));
 
-        Assertions.assertEquals(mockService.getMatchupPercentagesByDeckName(CHARIZARD), dummyMatchupsCharizard);
+        Assertions.assertEquals(mockService.getMatchupPercentagesByDeckName(dummyUser.getEmail(), CHARIZARD), dummyMatchupsCharizard);
     }
 
     @Test
@@ -179,8 +186,8 @@ public class MatchupServiceTest {
 
         Assertions.assertNotNull(dummyMatchupsPikachu);
         Assertions.assertNotNull(dummyMatchupsCharizard);
-        Assertions.assertEquals(mockService.getTotalMatchesByDeck(CHARIZARD), dummyMatchupsCharizard);
-        Assertions.assertEquals(mockService.getTotalMatchesByDeck(PIKACHU), dummyMatchupsPikachu);
+        Assertions.assertEquals(mockService.getTotalMatchesByDeck(dummyUser.getEmail(), CHARIZARD), dummyMatchupsCharizard);
+        Assertions.assertEquals(mockService.getTotalMatchesByDeck(dummyUser.getEmail(), PIKACHU), dummyMatchupsPikachu);
     }
 
     @Test

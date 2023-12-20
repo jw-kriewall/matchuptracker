@@ -75,8 +75,10 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
     @Override
-    public List<Matchup> getAllMatchupsByDeckName(String deckName) {
-        return repository.findAll().stream()
+    public List<Matchup> getAllMatchupsByDeckName(String email, String deckName) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
+        return repository.findByCreatedByEmail(email, sort)
+                .stream()
                 .filter(Objects::nonNull)
                 .filter(matchup -> matchup.getPlayerOneDeck().getName().equalsIgnoreCase(deckName) || matchup.getPlayerTwoDeck().getName().equalsIgnoreCase(deckName))
                 .collect(Collectors.toList());
@@ -94,10 +96,10 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
     @Override
-    public Map<String, Double> getMatchupPercentagesByDeckName(String deckName) {
+    public Map<String, Double> getMatchupPercentagesByDeckName(String email, String deckName) {
 
         Map<String, Double> winningPercentageMap = new HashMap<>();
-        List<Matchup> matchupsIncludingDeckName = getAllMatchupsByDeckName(deckName);
+        List<Matchup> matchupsIncludingDeckName = getAllMatchupsByDeckName(email, deckName);
 
         // Make a smaller list of matchups where only one other deck is checked.
         // add that deck to the checkedMatchups array so it doesn't get checked again.
@@ -213,11 +215,11 @@ public class MatchupServiceImpl implements MatchupService {
         return calculateRecord(wins, losses, ties);
     }
 
-    public Map<String, Integer> getTotalMatchesByDeck(String deckName) {
+    public Map<String, Integer> getTotalMatchesByDeck(String email, String deckName) {
         Map<String, Integer> matchupsCount = new HashMap<>();
         matchupsCount.put(deckName, 0);
 
-        List<Matchup> matchupsIncludingDeckName = getAllMatchupsByDeckName(deckName);
+        List<Matchup> matchupsIncludingDeckName = getAllMatchupsByDeckName(email, deckName);
 
         for(Matchup matchup : matchupsIncludingDeckName) {
 

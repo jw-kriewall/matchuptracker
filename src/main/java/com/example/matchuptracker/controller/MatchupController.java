@@ -80,7 +80,7 @@ public class MatchupController {
         JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
         String email = jwtAuthentication.getTokenAttributes().get("email").toString();
         //@TODO - use email to filter a user's matchups instead of sending all back.
-        return service.getAllMatchupsByDeckName(deckName);
+        return service.getAllMatchupsByDeckName(email, deckName);
     }
 
     @GetMapping(ENDPOINT_GET_MATCHUP_BY_USERNAME + "/{playerName}")
@@ -94,13 +94,17 @@ public class MatchupController {
     }
 
     @GetMapping(ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME + "/{deckName}")
-    public Map<String, Double> getMatchupPercentagesByDeckName(@PathVariable String deckName) {
-        return service.getMatchupPercentagesByDeckName(deckName);
+    public Map<String, Double> getMatchupPercentagesByDeckName(@PathVariable String deckName, Authentication authToken) {
+        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
+        String email = jwtAuthentication.getTokenAttributes().get("email").toString();
+        return service.getMatchupPercentagesByDeckName(email, deckName);
     }
 
     @GetMapping("/totalGames/{deckName}")
-    public Map<String, Integer> getTotalMatchesByDeck(@PathVariable String deckName) {
-        return service.getTotalMatchesByDeck(deckName);
+    public Map<String, Integer> getTotalMatchesByDeck(@PathVariable String deckName, Authentication authToken) {
+        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
+        String email = jwtAuthentication.getTokenAttributes().get("email").toString();
+        return service.getTotalMatchesByDeck(email, deckName);
     }
 
 //    @GetMapping(ENDPOINT_MATCHUPS_INDIVIDUAL_RECORDS + "/{deckName}")
