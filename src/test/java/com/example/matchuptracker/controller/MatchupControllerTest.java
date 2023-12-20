@@ -16,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -53,6 +55,9 @@ class MatchupControllerTest {
 
     private Deck sampleDeckPikachu = Deck.builder().name("Pikachu").cards("Cards").build();
     private Deck sampleDeckSquirtle = Deck.builder().name("Squirtle").cards("Cards").build();
+    private String email = "123@gmail.com";
+    private String password = "password";
+    private Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
 
     @BeforeEach
     public void init() {
@@ -140,7 +145,7 @@ class MatchupControllerTest {
         matchups.add(sampleMatchup2);
         matchups.add(sampleMatchup1);
 
-        when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
+        when(mockService.getAllMatchupsByDeckName(email, ArgumentMatchers.anyString())).thenReturn(matchups);
 
         ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/dummyDeckName"));
 
@@ -154,7 +159,7 @@ class MatchupControllerTest {
         matchups.add(sampleMatchup2);
         matchups.add(sampleMatchup1);
 
-        when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
+        when(mockService.getAllMatchupsByDeckName(email, ArgumentMatchers.anyString())).thenReturn(matchups);
 
         ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_USERNAME + "/dummyName"));
 
@@ -168,7 +173,7 @@ class MatchupControllerTest {
         matchups.add(sampleMatchup2);
         matchups.add(sampleMatchup1);
 
-        when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString())).thenReturn(matchups);
+        when(mockService.getAllMatchupsByDeckName(email, ArgumentMatchers.anyString())).thenReturn(matchups);
 
         ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_MATCHUPS_BY_FORMAT + "/dummyName"));
 
@@ -184,10 +189,10 @@ class MatchupControllerTest {
         expectedResult.put("matchup1", 0.5);
         expectedResult.put("matchup2", 0.75);
         expectedResult.put("matchup3", 1.0);
-        when(mockService.getMatchupPercentagesByDeckName(deckName)).thenReturn(expectedResult);
+        when(mockService.getMatchupPercentagesByDeckName(email, deckName)).thenReturn(expectedResult);
 
         // Act
-        Map<String, Double> response = mockController.getMatchupPercentagesByDeckName(deckName);
+        Map<String, Double> response = mockController.getMatchupPercentagesByDeckName(deckName, authentication);
 
         // Assert
         assertEquals(expectedResult, response);
