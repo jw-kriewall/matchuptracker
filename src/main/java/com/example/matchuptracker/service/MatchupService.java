@@ -20,6 +20,7 @@ public interface MatchupService {
     Map<String, String> getIndividualRecordsByDeckName(String deckName);
     String getRecordInMirrorMatch(String deckName);
     Map<String, Integer> getTotalMatchesByDeck(String deckName);
+    Map<String, Map<String, String>> getAllMatchupRecords();
     void deleteMatchup(int id);
     // @TODO: Get matchups by UserID - modify getAllMatchupsByPlayerName to be by playerID
 }
