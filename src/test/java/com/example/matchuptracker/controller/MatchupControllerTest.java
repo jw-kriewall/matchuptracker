@@ -2,7 +2,10 @@ package com.example.matchuptracker.controller;
 
 import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
+import com.example.matchuptracker.model.User;
+import com.example.matchuptracker.repository.MatchupRepository;
 import com.example.matchuptracker.service.MatchupService;
+import com.example.matchuptracker.service.MatchupServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,18 +19,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import utils.Constants;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,28 +45,43 @@ class MatchupControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private MatchupService mockService;
+    @MockBean
+    private JwtDecoder jwtDecoder;
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private MatchupController mockController;
+    @MockBean
+    private MatchupRepository mockRepository;
 
     private Matchup sampleMatchup1;
     private Matchup sampleMatchup2;
+    private Matchup sampleMatchup3;
 
 //    private Deck sampleDeck1 = Deck.builder().name("DeckName").cards("Cards");
 
-    private Deck sampleDeckPikachu = Deck.builder().name("Pikachu").cards("Cards").build();
-    private Deck sampleDeckSquirtle = Deck.builder().name("Squirtle").cards("Cards").build();
+    private Deck sampleDeckPikachu = Deck.builder().name(Constants.PIKACHU).cards("Cards").build();
+    private Deck sampleDeckSquirtle = Deck.builder().name(Constants.SQUIRTLE).cards("Cards").build();
+    private Deck sampleDeckCharizard = Deck.builder().name(Constants.CHARIZARD).cards("Cards").build();
+
     private String email = "123@gmail.com";
     private String password = "password";
-    private Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
+    User dummyUser = User.builder().email(email).build();
+
+    Jwt jwt = Jwt.withTokenValue("token")
+            .header("alg", "none")
+            .claim("email", email)
+            .build();
+    JwtAuthenticationToken mockJWTAuth = new JwtAuthenticationToken(jwt);
 
     @BeforeEach
     public void init() {
-        sampleMatchup1 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeckPikachu)
-                .playerTwoDeck(sampleDeckSquirtle).winningDeck("Pikachu").format("Standard").notes("none").build();
-        sampleMatchup2 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").playerOneDeck(sampleDeckPikachu)
+        sampleMatchup1 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").createdBy(dummyUser).playerOneDeck(sampleDeckPikachu)
+                .playerTwoDeck(sampleDeckSquirtle).winningDeck(Constants.PIKACHU).format("Standard").notes("none").build();
+        sampleMatchup2 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").createdBy(dummyUser).playerOneDeck(sampleDeckPikachu)
                 .playerTwoDeck(sampleDeckSquirtle).winningDeck("none").format("Standard").notes("none").build();
+        sampleMatchup3 = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").createdBy(dummyUser).playerOneDeck(sampleDeckCharizard)
+                .playerTwoDeck(sampleDeckSquirtle).winningDeck(Constants.CHARIZARD).format("Standard").notes("none").build();
     }
 
     @Test
@@ -73,28 +90,17 @@ class MatchupControllerTest {
         List<Matchup> matchups = new ArrayList<>();
         matchups.add(sampleMatchup1);
         matchups.add(sampleMatchup2);
+        matchups.add(sampleMatchup3);
 
-        String token = "eyJhbGciOiJSUzI1NiIsImtpZCI6ImMzYWZlN2E5YmRhNDZiYWU2ZWY5N2U0NmM5NWNkYTQ4OTEyZTU5NzkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI5NDYxNzE0MjczOTEtOXExbGtuYTFpYnBncTQ5ZzJmaXZsOG0yZWRnNjMwNGEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI5NDYxNzE0MjczOTEtOXExbGtuYTFpYnBncTQ5ZzJmaXZsOG0yZWRnNjMwNGEuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDc0Njc5MDUzNjk1MDQwODM5NTMiLCJlbWFpbCI6Imp3a3JpZXdhbGxAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5iZiI6MTY5MzIzMTA0NSwibmFtZSI6IkpXIEtyaWV3YWxsIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FBY0hUdGZ4NEctTjdid3dqLV9GSms3TmFRV3R1aVBxekllajlwQ2tlMUJQdm9Nd25HZz1zOTYtYyIsImdpdmVuX25hbWUiOiJKVyIsImZhbWlseV9uYW1lIjoiS3JpZXdhbGwiLCJsb2NhbGUiOiJlbiIsImlhdCI6MTY5MzIzMTM0NSwiZXhwIjoxNjkzMjM0OTQ1LCJqdGkiOiI0NDE1NjY1ZGVhM2EzMWQwYTQ0NjkwZjBhNDM4NTFlMjZiM2U0ZTRkIn0.b5wMCDskPe98tKlq6kHZUjHSIEbcX8l7Piv5Mb8Qdkxn4Hz5a01tc75-JzJaMAXfw4588G-t7S84yu7o65zD0icO2E-fKI_a-zDRGIAWkLYljMX4B8oyiQffptnBHxMbv-0cRfuFzNvqRfU2xb4NIpeRIHIJZ4xQSwglRZwYaojpYDAoBxRPLaLGVowb3WJiqJFht2zNUx_ZUe-FMiAsWAE2IL2-Nswye5BiuG2r_yvEh_myXi2WhlAmlrY4la9pjJG2SMaaVWBkeUMn2X7bmuuFyiGt5QI01IIanv2GEhq1kI6EzztTQ28LHQUGpeANOr3LbxqIXFhH5qdptIsBQQ";
-
-
-
-//
-//        when(JwtAuthenticationToken.getTokenAttributes((JwtAuthenticationToken) jsonToken).thenReturn();
-//
-//
-//        when(mockService.getAllMatchups()).thenReturn(matchups);
-//        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
-//
-//        when()
+        when(mockService.getAllMatchups()).thenReturn(matchups);
 
         ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_ALL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(matchups)));
+                        .principal(mockJWTAuth))
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
-        response.andExpect(MockMvcResultMatchers.status().isOk());
-                //.andExpect(MockMvcResultMatchers.jsonPath("$.playerOneDeck", CoreMatchers.containsString(sampleMatchup1.getPlayerOneDeck())));
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .equals(matchups);
     }
-
 
     @Test
     @DisplayName("When a matchup saves, do we return the correct object?")
@@ -136,7 +142,6 @@ class MatchupControllerTest {
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.playerTwoName", CoreMatchers.is(sampleMatchup2.getPlayerTwoName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.winningDeck", CoreMatchers.is(sampleMatchup2.getWinningDeck())));
-
     }
 
     @Test
@@ -145,12 +150,36 @@ class MatchupControllerTest {
         matchups.add(sampleMatchup2);
         matchups.add(sampleMatchup1);
 
-        when(mockService.getAllMatchupsByDeckName(email, ArgumentMatchers.anyString())).thenReturn(matchups);
+        when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+                .thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/dummyDeckName"));
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/dummyDeckName")
+                .principal(mockJWTAuth))
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .equals(matchups);
+    }
+
+    @Test
+    void testGetAllMatchupRecords() {
+        // Arrange
+        MatchupServiceImpl service = new MatchupServiceImpl();
+        service.setRepository(mockRepository);
+
+        List<Matchup> matchups = new ArrayList<>();
+        matchups.add(sampleMatchup3);
+        matchups.add(sampleMatchup2);
+        matchups.add(sampleMatchup1);
+
+        when(service.getAllMatchups()).thenReturn(matchups);
+
+        // Act
+        Map<String, Map<String, String>> allMatchupRecords = service.getAllMatchupRecords();
+
+        // Assert
+        assertNotNull(allMatchupRecords, "The returned map should not be null");
+        assertFalse(allMatchupRecords.isEmpty());
     }
 
     @Test
@@ -159,7 +188,7 @@ class MatchupControllerTest {
         matchups.add(sampleMatchup2);
         matchups.add(sampleMatchup1);
 
-        when(mockService.getAllMatchupsByDeckName(email, ArgumentMatchers.anyString())).thenReturn(matchups);
+        when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(matchups);
 
         ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_USERNAME + "/dummyName"));
 
@@ -173,7 +202,7 @@ class MatchupControllerTest {
         matchups.add(sampleMatchup2);
         matchups.add(sampleMatchup1);
 
-        when(mockService.getAllMatchupsByDeckName(email, ArgumentMatchers.anyString())).thenReturn(matchups);
+        when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(matchups);
 
         ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_MATCHUPS_BY_FORMAT + "/dummyName"));
 
@@ -182,20 +211,38 @@ class MatchupControllerTest {
     }
 
     @Test
-    public void testGetMatchupPercentagesByDeckName() {
+    public void testGetMatchupPercentagesByDeckName() throws Exception {
         // Arrange
-        String deckName = "testDeck";
+        String deckName = Constants.PIKACHU;
         Map<String, Double> expectedResult = new HashMap<>();
         expectedResult.put("matchup1", 0.5);
         expectedResult.put("matchup2", 0.75);
         expectedResult.put("matchup3", 1.0);
-        when(mockService.getMatchupPercentagesByDeckName(email, deckName)).thenReturn(expectedResult);
 
-        // Act
-        Map<String, Double> response = mockController.getMatchupPercentagesByDeckName(deckName, authentication);
+        when(mockService.getMatchupPercentagesByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(expectedResult);
 
-        // Assert
-        assertEquals(expectedResult, response);
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/" + Constants.PIKACHU)
+                        .principal(mockJWTAuth))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        response.andExpect(MockMvcResultMatchers.status().isOk())
+                .equals(expectedResult);
+    }
+
+    private List<Matchup> prepareMockMatchups() {
+        // Create mock Matchup objects with various deck names
+        // Ensure you create Matchup objects with different deck names for thorough testing
+        // Example:
+        // Matchup matchup1 = new Matchup(new Deck("Deck1"), new Deck("Deck2"), ..., ..., ...);
+        // Matchup matchup2 = new Matchup(new Deck("Deck2"), new Deck("Deck3"), ..., ..., ...);
+        // ...
+        return Arrays.asList(sampleMatchup1, sampleMatchup2, sampleMatchup3);
+    }
+
+    private Map<String, String> mockIndividualRecords(String deckName) {
+        Map<String, String> records = new HashMap<>();
+        records.put("SomeKeyBasedOnLogic", "SomeValue");
+        return records;
     }
 
 

@@ -2,7 +2,9 @@ package com.example.matchuptracker.Utils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.security.Key;
 import java.util.Date;
@@ -24,5 +26,11 @@ public class JwtUtil {
                 .compact();
 
         return token;
+    }
+
+    public static String getEmailFromJWT(Authentication authToken) {
+        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
+        String email = jwtAuthentication.getTokenAttributes().get("email").toString();
+        return email;
     }
 }
