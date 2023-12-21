@@ -91,16 +91,12 @@ public class MatchupController {
 
     @GetMapping(ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME + "/{deckName}")
     public Map<String, Double> getMatchupPercentagesByDeckName(@PathVariable String deckName, Authentication authToken) {
-        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
-        String email = jwtAuthentication.getTokenAttributes().get("email").toString();
-        return service.getMatchupPercentagesByDeckName(email, deckName);
+        return service.getMatchupPercentagesByDeckName(JwtUtil.getEmailFromJWT(authToken), deckName);
     }
 
     @GetMapping("/totalGames/{deckName}")
     public Map<String, Integer> getTotalMatchesByDeck(@PathVariable String deckName, Authentication authToken) {
-        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
-        String email = jwtAuthentication.getTokenAttributes().get("email").toString();
-        return service.getTotalMatchesByDeck(email, deckName);
+        return service.getTotalMatchesByDeck(JwtUtil.getEmailFromJWT(authToken), deckName);
     }
 
     @GetMapping(ENDPOINT_GET_ALL_MATCHUP_RECORDS)
