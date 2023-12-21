@@ -35,7 +35,7 @@ public class MatchupServiceTest {
     private Deck sampleDeckCharizard = Deck.builder().name(CHARIZARD).cards("Cards").build();
     private Deck sampleDeckBulbasaur = Deck.builder().name(BULBASAUR).cards("Cards").build();
     private Deck sampleDeckPidgey = Deck.builder().name(PIDGEY).cards("Cards").build();
-    private User dummyUser = User.builder().username("123@gmail.com").build();
+    private User dummyUser = User.builder().email("123@gmail.com").build();
 
     Date date = new Date();
 
@@ -105,7 +105,6 @@ public class MatchupServiceTest {
     @Test
     @DisplayName("Does getAll return all matchups?")
     public void getAllMatchups() {
-
         when(mockRepository.findAll(Sort.by(Sort.Direction.DESC, "createdOn"))).thenReturn(dummyData);
 
         Assertions.assertNotNull(mockService.getAllMatchups());
@@ -128,8 +127,8 @@ public class MatchupServiceTest {
     @Test
     @DisplayName("Does getAllMatchups by Deck Name work correctly?")
     public void testGetAllMatchupsByDeckName() {
-
-        when(mockRepository.findAll()).thenReturn(dummyData);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
+        when(mockRepository.findByCreatedByEmail(dummyUser.getEmail(), sort)).thenReturn(dummyData);
 
         Assertions.assertNotNull(mockService.getAllMatchupsByDeckName(dummyUser.getEmail(), PIKACHU));
         Assertions.assertEquals(mockService.getAllMatchupsByDeckName(dummyUser.getEmail(), PIKACHU).size(), 3);
@@ -150,6 +149,8 @@ public class MatchupServiceTest {
     @Test
     @DisplayName("Does getMatchupPercentages by Deck Name work correctly?")
     public void testGetMatchupPercentagesByDeckName() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
+        when(mockRepository.findByCreatedByEmail(dummyUser.getEmail(), sort)).thenReturn(dummyData);
 
         Map<String, Double> dummyMatchupsCharizard = new HashMap<>();
         dummyMatchupsCharizard.put(PIKACHU, 0.0);
@@ -158,8 +159,6 @@ public class MatchupServiceTest {
         Map<String, Double> dummyMatchupsPikachu = new HashMap<>();
         dummyMatchupsPikachu.put(SQUIRTLE, 50.0);
         dummyMatchupsPikachu.put(CHARIZARD, 100.0);
-
-        when(mockRepository.findAll()).thenReturn(dummyData);
 
         Assertions.assertNotNull(mockService.getMatchupPercentagesByDeckName(dummyUser.getEmail(), CHARIZARD));
         Assertions.assertNotNull(mockService.getMatchupPercentagesByDeckName(dummyUser.getEmail(), PIKACHU));
@@ -171,8 +170,8 @@ public class MatchupServiceTest {
     @Test
     @DisplayName("Does getTotalMatches by Deck work correctly?")
     public void testGetTotalMatchesByDeck() {
-
-        when(mockRepository.findAll()).thenReturn(dummyData);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
+        when(mockRepository.findByCreatedByEmail(dummyUser.getEmail(), sort)).thenReturn(dummyData);
 
         Map<String, Integer> dummyMatchupsPikachu = new HashMap<>();
         dummyMatchupsPikachu.put(PIKACHU, 0);
@@ -203,7 +202,6 @@ public class MatchupServiceTest {
     @Test
     @DisplayName("Does Update work correctly?")
     public void testUpdateMatchup() {
-
         when(mockRepository.findById(Mockito.anyInt())).thenReturn(Optional.ofNullable(dummyMatchup1));
 
         Matchup matchup = mockService.updateMatchup(1, dummyMatchup2);
@@ -250,8 +248,6 @@ public class MatchupServiceTest {
         expectedRecords.put(SQUIRTLE, "0-2-1");
         expectedRecords.put(BULBASAUR, "0-1-0");
         expectedRecords.put(PIDGEY, "1-0-0");
-
-        when(mockRepository.findAll()).thenReturn(charizardDummyData);
 
         Assertions.assertNotNull(mockService.getIndividualRecordsByDeckName(CHARIZARD, charizardDummyData));
         Assertions.assertEquals(expectedRecords, mockService.getIndividualRecordsByDeckName(CHARIZARD, charizardDummyData));

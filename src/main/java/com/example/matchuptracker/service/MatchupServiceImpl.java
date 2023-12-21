@@ -251,8 +251,6 @@ public class MatchupServiceImpl implements MatchupService {
                 .filter(name -> !name.isBlank() && !name.isEmpty())
                 .collect(Collectors.toSet());
 
-
-
         // this works but needs to be optimized - it is making individual data calls for every deck.
         // Consider extracting this to a separate method.
         for (String deckName : uniqueDeckNames) {
