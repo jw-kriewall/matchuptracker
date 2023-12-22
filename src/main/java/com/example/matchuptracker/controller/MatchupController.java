@@ -34,6 +34,7 @@ public class MatchupController {
     public static final String ENDPOINT_MATCHUPS_BY_FORMAT = "/format";
     public static final String ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME = "/percentages";
     public static final String ENDPOINT_GET_ALL_MATCHUP_RECORDS = "/getAllRecords";
+    public static final String ENDPOINT_TOTAL_GAMES = "/totalGames";
     public static final String VERSION = "/v1";
     public static final String ENDPOINT_DELETE = "/delete";
     private final MatchupService service;
@@ -94,7 +95,7 @@ public class MatchupController {
         return service.getMatchupPercentagesByDeckName(JwtUtil.getEmailFromJWT(authToken), deckName);
     }
 
-    @GetMapping("/totalGames/{deckName}")
+    @GetMapping(ENDPOINT_TOTAL_GAMES + "/{deckName}")
     public Map<String, Integer> getTotalMatchesByDeck(@PathVariable String deckName, Authentication authToken) {
         return service.getTotalMatchesByDeck(JwtUtil.getEmailFromJWT(authToken), deckName);
     }

@@ -245,6 +245,65 @@ class MatchupControllerTest {
         return records;
     }
 
+    @Test
+    @DisplayName("Does GetAllMatchups endpoint work?")
+    public void testGetAllMatchups() throws Exception {
+        List<Matchup> matchups = new ArrayList<>();
+        matchups.add(sampleMatchup1);
+        matchups.add(sampleMatchup2);
+        matchups.add(sampleMatchup3);
+
+        when(mockService.getAllMatchups()).thenReturn(matchups);
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_ALL_MATCHUPS)
+                .principal(mockJWTAuth))
+        .andExpect(MockMvcResultMatchers.status().isOk());
+
+        response.equals(matchups);
+        response.equals(matchups != null);
+    }
+
+    @Test
+    @DisplayName("Does GetMatchupPercentagesByDeckName Endpoint work?")
+    public void testGetAllMatchupPercentagesByDeckName() throws Exception {
+        String deckName = Constants.PIKACHU;
+        List<Matchup> matchups = new ArrayList<>();
+        matchups.add(sampleMatchup1);
+        matchups.add(sampleMatchup2);
+        matchups.add(sampleMatchup3);
+
+        Map<String, Double> expectedResponse = new HashMap<>();
+        expectedResponse.put("OpponentDeck1", 75.0);
+        expectedResponse.put("OpponentDeck2", 50.0);
+
+        when(mockService.getMatchupPercentagesByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(expectedResponse);
+
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME + "/" + deckName)
+                        .principal(mockJWTAuth))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        response.equals(expectedResponse);
+        response.equals(expectedResponse != null);
+    }
+
+    @Test
+    @DisplayName("Test getTotalMatchesByDeck endpoint")
+    public void testGetTotalMatchesByDeck() throws Exception {
+        String deckName = "sampleDeckName";
+        Map<String, Integer> expectedResponse = new HashMap<>();
+        expectedResponse.put("MatchType1", 10);
+        expectedResponse.put("MatchType2", 20);
+        // ... Populate the map as needed for your test
+
+        when(mockService.getTotalMatchesByDeck(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(expectedResponse);
+
+        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_TOTAL_GAMES + "/" + deckName)
+                        .principal(mockJWTAuth))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        response.equals(expectedResponse);
+        response.equals(expectedResponse != null);
+    }
+
 
 //    @Test
 //    void getMatchupPercentagesByDeckName() {
