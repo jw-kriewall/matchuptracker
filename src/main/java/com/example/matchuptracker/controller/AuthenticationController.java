@@ -9,13 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthenticationController {
 
+    public static final String ERROR_MESSAGE = "ERROR WITH LOGIN!";
+
     @GetMapping("/login/success")
     public String handleGoogleLoginSuccess(@AuthenticationPrincipal OAuth2User principal) {
         if(principal.getAuthorities().contains("read")) {
             return JwtUtil.createJwtToken(principal.toString());
         }
         else {
-            return "ERROR WITH LOGIN!";
+            return ERROR_MESSAGE;
         }
     }
 }
