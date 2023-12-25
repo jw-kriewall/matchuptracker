@@ -43,7 +43,7 @@ public class JWTUtilsTest {
 
         // Decode the JWT Token
         Jws<Claims> claimsJws = Jwts.parserBuilder()
-                .setSigningKey((Key)key)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token);
         Claims claims = claimsJws.getBody();

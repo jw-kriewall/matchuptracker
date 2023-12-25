@@ -23,6 +23,8 @@ public class MatchupServiceImpl implements MatchupService {
         return repository;
     }
 
+    Sort defaultSort = Sort.by(Sort.Direction.DESC, "createdOn");
+
     @Autowired
     public void setRepository(MatchupRepository repository) {
         this.repository = repository;
@@ -264,6 +266,17 @@ public class MatchupServiceImpl implements MatchupService {
     @Override
     public void deleteMatchup(int id) {
         repository.delete(repository.getReferenceById(id));
+    }
+
+    @Override
+    public Integer countAllByPlayerEmail(String email, List<String> deckNames) {
+        return repository.findByCreatedByEmail(email, defaultSort).stream()
+                .filter(matchup ->
+                        deckNames.contains(matchup.getPlayerOneDeck().getName()) ||
+                                deckNames.contains(matchup.getPlayerTwoDeck().getName())
+                )
+                .collect(Collectors.toSet())
+                .size();
     }
 
     private double calculatePercentage(long numerator, long denominator) {
