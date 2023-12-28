@@ -5,6 +5,7 @@ import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.service.MatchupService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -35,6 +36,7 @@ public class MatchupController {
     public static final String ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME = "/percentages";
     public static final String ENDPOINT_GET_ALL_MATCHUP_RECORDS = "/getAllRecords";
     public static final String ENDPOINT_TOTAL_GAMES = "/totalGames";
+    public static final String ENDPOINT_COUNT_ALL = "/count";
     public static final String VERSION = "/v1";
     public static final String ENDPOINT_DELETE = "/delete";
     private final MatchupService service;
@@ -53,9 +55,13 @@ public class MatchupController {
 
     @GetMapping(ENDPOINT_GET_ALL)
     public ResponseEntity<List<Matchup>> getAllByEmail(Authentication authToken) throws JsonProcessingException {
-        JwtAuthenticationToken jwtAuthentication = (JwtAuthenticationToken) authToken;
-        String email = jwtAuthentication.getTokenAttributes().get("email").toString();
-        return new ResponseEntity<>(service.getAllMatchupsByPlayerEmail(email), HttpStatus.OK);
+        return new ResponseEntity<>(service.getAllMatchupsByPlayerEmail(JwtUtil.getEmailFromJWT(authToken)), HttpStatus.OK);
+    }
+
+    @GetMapping(ENDPOINT_COUNT_ALL)
+    @Description("Takes in a list of deckNames. Returns a count of all matchups for display purposes")
+    public ResponseEntity<Integer> countAllByEmail(Authentication authToken, @RequestParam List<String> deckNames) throws JsonProcessingException {
+        return new ResponseEntity<>(service.countAllByPlayerEmail(JwtUtil.getEmailFromJWT(authToken), deckNames), HttpStatus.OK);
     }
 
     @PostMapping(ENDPOINT_ADD)
