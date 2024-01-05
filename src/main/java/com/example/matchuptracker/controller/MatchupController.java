@@ -107,8 +107,8 @@ public class MatchupController {
     }
 
     @GetMapping(ENDPOINT_GET_ALL_MATCHUP_RECORDS)
-    public Map<String, Map<String, String>> getAllMatchupRecords() {
-        return service.getAllMatchupRecords();
+    public Map<String, Map<String, String>> getAllMatchupRecords(Authentication authToken) {
+        return service.getAllMatchupRecords(JwtUtil.getEmailFromJWT(authToken));
     }
 
     @DeleteMapping(ENDPOINT_DELETE + "/{id}")
