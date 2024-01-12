@@ -31,7 +31,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/matchups/**").permitAll();
+                    auth.requestMatchers("/matchups/**").authenticated();
                     auth.requestMatchers("/secure").authenticated();
                 })
                 .oauth2ResourceServer()
