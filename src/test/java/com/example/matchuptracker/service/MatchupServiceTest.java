@@ -4,6 +4,7 @@ import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.model.User;
 import com.example.matchuptracker.repository.MatchupRepository;
+import com.example.matchuptracker.service.matchup.MatchupServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

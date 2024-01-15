@@ -2,18 +2,20 @@ package com.example.matchuptracker.controller;
 
 import com.example.matchuptracker.Utils.JwtUtil;
 import com.example.matchuptracker.model.Matchup;
-import com.example.matchuptracker.service.MatchupService;
+import com.example.matchuptracker.model.User;
+import com.example.matchuptracker.service.matchup.MatchupService;
+import com.example.matchuptracker.service.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.example.matchuptracker.controller.MatchupController.MATCHUPS;
 
@@ -40,9 +42,10 @@ public class MatchupController {
     public static final String VERSION = "/v1";
     public static final String ENDPOINT_DELETE = "/delete";
     private final MatchupService service;
+    private final UserService userService;
 
-    public MatchupController(MatchupService service) {
-        this.service = service;
+    public MatchupController(MatchupService service, UserService userService) {
+        this.service = service; this.userService = userService;
     }
 
     @GetMapping("/")
@@ -66,7 +69,23 @@ public class MatchupController {
 
     @PostMapping(ENDPOINT_ADD)
     public ResponseEntity<Matchup> add(@RequestBody Matchup matchup) {
-        return new ResponseEntity<>(service.saveMatchup(matchup), HttpStatus.OK);
+        String email = matchup.getCreatedBy().getEmail();
+        Optional<User> userOptional = userService.findUserByEmail(email);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            matchup.setCreatedBy(user);
+
+            Matchup savedMatchup = service.saveMatchup(matchup);
+
+            if (savedMatchup != null) {
+                return new ResponseEntity<>(savedMatchup, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping(ENDPOINT_UPDATE + "/{id}")

@@ -19,6 +19,7 @@ import java.util.UUID;
 @Builder
 @ToString
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -39,6 +40,15 @@ public class User implements UserDetails {
     private String email;
     @OneToMany
     private List<Deck> decks;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @JsonProperty("role")
     private String role;
 
@@ -55,6 +65,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return null;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

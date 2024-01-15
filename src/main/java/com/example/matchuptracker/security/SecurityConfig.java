@@ -13,6 +13,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
+
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, @Value("${CORS_ALLOWED_ORIGIN:http://localhost:3000}") String corsAllowedOrigin) throws Exception {
 
@@ -27,11 +29,14 @@ public class SecurityConfig {
 
         // Add the CorsFilter to the HttpSecurity configuration
         http.cors().configurationSource(source);
-        http.csrf().disable();
 
+
+        //@TODO: .permitAll() needs to be changed for stronger authentication.
         http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/matchups/**").authenticated();
+                    auth.requestMatchers("/matchups/**").permitAll();
+                    auth.requestMatchers("/api/user/**").permitAll();
                     auth.requestMatchers("/secure").authenticated();
                 })
                 .oauth2ResourceServer()
