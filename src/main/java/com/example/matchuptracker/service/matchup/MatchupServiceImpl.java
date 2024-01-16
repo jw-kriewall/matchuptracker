@@ -1,4 +1,4 @@
-package com.example.matchuptracker.service;
+package com.example.matchuptracker.service.matchup;
 
 import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;

@@ -15,10 +15,10 @@ public class Matchup {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     private String playerOneName;
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE})
     private Deck playerOneDeck;
     private String playerTwoName;
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE})
     private Deck playerTwoDeck;
     private String startingPlayer;
     @NonNull
@@ -26,8 +26,7 @@ public class Matchup {
     private String format;
     private String notes;
     private Date createdOn;
-    @ManyToOne(cascade=CascadeType.ALL)
-    @JoinColumn(name = "created_by_id")
+    @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE})
     private User createdBy;
 
     public Date getCreatedOn() {
