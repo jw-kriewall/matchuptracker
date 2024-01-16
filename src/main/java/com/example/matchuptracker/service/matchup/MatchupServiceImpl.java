@@ -79,7 +79,7 @@ public class MatchupServiceImpl implements MatchupService {
     @Override
     public List<Matchup> getAllMatchupsByDeckName(String email, String deckName) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
-        return repository.findByCreatedByEmail(email, sort)
+        return repository.findByCreatedBy_Email(email, sort)
                 .stream()
                 .filter(Objects::nonNull)
                 .filter(matchup -> matchup.getPlayerOneDeck().getName().equalsIgnoreCase(deckName) || matchup.getPlayerTwoDeck().getName().equalsIgnoreCase(deckName))
@@ -94,7 +94,7 @@ public class MatchupServiceImpl implements MatchupService {
     @Override
     public List<Matchup> getAllMatchupsByPlayerEmail(String email) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
-        return repository.findByCreatedByEmail(email, sort);
+        return repository.findByCreatedBy_Email(email, sort);
     }
 
     @Override
@@ -243,9 +243,9 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
     @Override
-    public Map<String, Map<String, String>> getAllMatchupRecords() {
+    public Map<String, Map<String, String>> getAllMatchupRecords(String email) {
         Map<String, Map<String, String>> allMatchupRecords = new HashMap<>();
-        List<Matchup> allMatchups = getAllMatchups();
+        List<Matchup> allMatchups = getAllMatchupsByPlayerEmail(email);
 
         // Retrieve unique deck names from all matchups
         Set<String> uniqueDeckNames = allMatchups.stream()
@@ -270,7 +270,7 @@ public class MatchupServiceImpl implements MatchupService {
 
     @Override
     public Integer countAllByPlayerEmail(String email, List<String> deckNames) {
-        return repository.findByCreatedByEmail(email, defaultSort).stream()
+        return repository.findByCreatedBy_Email(email, defaultSort).stream()
                 .filter(matchup ->
                         deckNames.contains(matchup.getPlayerOneDeck().getName()) ||
                                 deckNames.contains(matchup.getPlayerTwoDeck().getName())

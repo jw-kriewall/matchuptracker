@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -167,19 +168,28 @@ class MatchupControllerTest {
         MatchupServiceImpl service = new MatchupServiceImpl();
         service.setRepository(mockRepository);
 
+        User newUser = User.builder().email("!!@@123").build();
+        Matchup nonUserMatchup = Matchup.builder().playerOneName("Fred").playerTwoName("Jim").createdBy(newUser).playerOneDeck(sampleDeckPikachu)
+                .playerTwoDeck(sampleDeckSquirtle).winningDeck(Constants.PIKACHU).format("Standard").notes("none").build();
+
         List<Matchup> matchups = new ArrayList<>();
+        matchups.add(nonUserMatchup);
         matchups.add(sampleMatchup3);
         matchups.add(sampleMatchup2);
         matchups.add(sampleMatchup1);
 
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
+
         when(service.getAllMatchups()).thenReturn(matchups);
+        when(mockRepository.findByCreatedBy_Email(dummyUser.getEmail(), sort)).thenReturn(matchups);
 
         // Act
-        Map<String, Map<String, String>> allMatchupRecords = service.getAllMatchupRecords();
+        Map<String, Map<String, String>> allMatchupRecords = service.getAllMatchupRecords(dummyUser.getEmail());
 
         // Assert
         assertNotNull(allMatchupRecords, "The returned map should not be null");
         assertFalse(allMatchupRecords.isEmpty());
+        assertEquals(3, allMatchupRecords.size());
     }
 
     @Test

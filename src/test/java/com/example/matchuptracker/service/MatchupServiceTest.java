@@ -129,7 +129,7 @@ public class MatchupServiceTest {
     @DisplayName("Does getAllMatchups by Deck Name work correctly?")
     public void testGetAllMatchupsByDeckName() {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
-        when(mockRepository.findByCreatedByEmail(dummyUser.getEmail(), sort)).thenReturn(dummyData);
+        when(mockRepository.findByCreatedBy_Email(dummyUser.getEmail(), sort)).thenReturn(dummyData);
 
         Assertions.assertNotNull(mockService.getAllMatchupsByDeckName(dummyUser.getEmail(), PIKACHU));
         Assertions.assertEquals(mockService.getAllMatchupsByDeckName(dummyUser.getEmail(), PIKACHU).size(), 3);
@@ -151,7 +151,7 @@ public class MatchupServiceTest {
     @DisplayName("Does getMatchupPercentages by Deck Name work correctly?")
     public void testGetMatchupPercentagesByDeckName() {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
-        when(mockRepository.findByCreatedByEmail(dummyUser.getEmail(), sort)).thenReturn(dummyData);
+        when(mockRepository.findByCreatedBy_Email(dummyUser.getEmail(), sort)).thenReturn(dummyData);
 
         Map<String, Double> dummyMatchupsCharizard = new HashMap<>();
         dummyMatchupsCharizard.put(PIKACHU, 0.0);
@@ -172,7 +172,7 @@ public class MatchupServiceTest {
     @DisplayName("Does getTotalMatches by Deck work correctly?")
     public void testGetTotalMatchesByDeck() {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
-        when(mockRepository.findByCreatedByEmail(dummyUser.getEmail(), sort)).thenReturn(dummyData);
+        when(mockRepository.findByCreatedBy_Email(dummyUser.getEmail(), sort)).thenReturn(dummyData);
 
         Map<String, Integer> dummyMatchupsPikachu = new HashMap<>();
         dummyMatchupsPikachu.put(PIKACHU, 0);
