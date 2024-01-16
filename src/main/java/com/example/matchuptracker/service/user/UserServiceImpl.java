@@ -33,18 +33,17 @@ public class UserServiceImpl implements UserService{
     public String getOrAddUserRole(String email, String username) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
-        //Do I need to set username and other attributes?
         User user;
         if (!optionalUser.isPresent()) {
             user = new User();
             user.setEmail(email);
-            user.setRole("user");
             user.setUsername(username);
+            user.setRole("user");
+
             userRepository.save(user);
         } else {
             user = optionalUser.get();
         }
-
         return user.getRole();
     }
 
