@@ -18,17 +18,23 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.example.matchuptracker.controller.MatchupController.MATCHUPS;
+import static com.example.matchuptracker.controller.MatchupController.API;
+import static com.example.matchuptracker.controller.MatchupController.VERSION;
+
 
 @RestController
-@RequestMapping(MATCHUPS)
+@RequestMapping(API + VERSION + MATCHUPS)
 @Slf4j
 //@CrossOrigin(exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
 @CrossOrigin("*")
 public class MatchupController {
 
+    public static final String API = "/api";
+    public static final String VERSION = "/v1";
     public static final String MATCHUPS = "/matchups";
-    public static final String ENDPOINT_GET_ALL = "/getAll";
-    public static final String ENDPOINT_GET_ALL_MATCHUPS = "/getAllMatchups";
+
+    public static final String ENDPOINT_GET_ALL = "";
+    public static final String ENDPOINT_GET_ALL_MATCHUPS = "/admin";
     public static final String ENDPOINT_ADD = "/add";
     public static final String ENDPOINT_UPDATE = "/update";
     public static final String ENDPOINT_GET_MATCHUP_BY_ID = "/getbymatchid";
@@ -36,10 +42,9 @@ public class MatchupController {
     public static final String ENDPOINT_GET_MATCHUP_BY_USERNAME = "/playerName";
     public static final String ENDPOINT_MATCHUPS_BY_FORMAT = "/format";
     public static final String ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME = "/percentages";
-    public static final String ENDPOINT_GET_ALL_MATCHUP_RECORDS = "/getAllRecords";
+    public static final String ENDPOINT_GET_ALL_MATCHUP_RECORDS = "/records";
     public static final String ENDPOINT_TOTAL_GAMES = "/totalGames";
     public static final String ENDPOINT_COUNT_ALL = "/count";
-    public static final String VERSION = "/v1";
     public static final String ENDPOINT_DELETE = "/delete";
     private final MatchupService service;
     private final UserService userService;

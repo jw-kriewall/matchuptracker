@@ -1,5 +1,6 @@
 package com.example.matchuptracker.security;
 
+import com.example.matchuptracker.controller.MatchupController;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +34,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/matchups/**").authenticated();
+                    auth.requestMatchers( MatchupController.API + MatchupController.VERSION + MatchupController.MATCHUPS + "/**").authenticated();
                     auth.requestMatchers("/api/user/**").authenticated();
                     auth.requestMatchers("/secure").authenticated();
                 })

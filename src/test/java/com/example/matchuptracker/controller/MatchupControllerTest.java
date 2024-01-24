@@ -6,6 +6,7 @@ import com.example.matchuptracker.model.User;
 import com.example.matchuptracker.repository.MatchupRepository;
 import com.example.matchuptracker.service.matchup.MatchupService;
 import com.example.matchuptracker.service.matchup.MatchupServiceImpl;
+import com.example.matchuptracker.service.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +55,8 @@ class MatchupControllerTest {
     private MatchupController mockController;
     @MockBean
     private MatchupRepository mockRepository;
+    @MockBean
+    private UserService userService;
 
     private Matchup sampleMatchup1;
     private Matchup sampleMatchup2;
@@ -106,6 +109,8 @@ class MatchupControllerTest {
     @Test
     @DisplayName("When a matchup saves, do we return the correct object?")
     void testAddMatchup() throws Exception {
+        User mockUser = new User();
+        given(userService.findUserByEmail(ArgumentMatchers.any())).willReturn(Optional.of(mockUser));
         given(mockService.saveMatchup(ArgumentMatchers.any())).willAnswer((invocation -> invocation.getArgument(0)));
 
         ResultActions response = mockMvc.perform(post(MatchupController.MATCHUPS + MatchupController.ENDPOINT_ADD)
