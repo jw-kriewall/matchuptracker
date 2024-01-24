@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 @CrossOrigin("*")
-@RequestMapping("/api/user")
+@RequestMapping(UserController.API + UserController.VERSION + UserController.USER_ENDPOINT)
 public class UserController {
+
+    public static final String API = "/api";
+    public static final String VERSION = "/v1";
+    public static final String USER_ENDPOINT = "/user";
 
     private final UserService userService;
 

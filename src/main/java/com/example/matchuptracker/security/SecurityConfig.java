@@ -1,6 +1,7 @@
 package com.example.matchuptracker.security;
 
 import com.example.matchuptracker.controller.MatchupController;
+import com.example.matchuptracker.controller.UserController;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,13 +30,11 @@ public class SecurityConfig {
         // Add the CorsFilter to the HttpSecurity configuration
         http.cors().configurationSource(source);
 
-
-        //@TODO: .permitAll() needs to be changed for stronger authentication.
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers( MatchupController.API + MatchupController.VERSION + MatchupController.MATCHUPS + "/**").authenticated();
-                    auth.requestMatchers("/api/user/**").authenticated();
+                    auth.requestMatchers(UserController.API + UserController.VERSION + UserController.USER_ENDPOINT + "/**").authenticated();
                     auth.requestMatchers("/secure").authenticated();
                 })
                 .oauth2ResourceServer()

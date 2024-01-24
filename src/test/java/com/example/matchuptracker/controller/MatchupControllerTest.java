@@ -62,7 +62,7 @@ class MatchupControllerTest {
     private Matchup sampleMatchup2;
     private Matchup sampleMatchup3;
 
-//    private Deck sampleDeck1 = Deck.builder().name("DeckName").cards("Cards");
+    private String matchupEndpointBase = MatchupController.API + MatchupController.VERSION + MatchupController.MATCHUPS;
 
     private Deck sampleDeckPikachu = Deck.builder().name(Constants.PIKACHU).cards("Cards").build();
     private Deck sampleDeckSquirtle = Deck.builder().name(Constants.SQUIRTLE).cards("Cards").build();
@@ -98,7 +98,7 @@ class MatchupControllerTest {
 
         when(mockService.getAllMatchups()).thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_ALL)
+        ResultActions response = mockMvc.perform(get(matchupEndpointBase + MatchupController.ENDPOINT_GET_ALL)
                         .principal(mockJWTAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -113,7 +113,7 @@ class MatchupControllerTest {
         given(userService.findUserByEmail(ArgumentMatchers.any())).willReturn(Optional.of(mockUser));
         given(mockService.saveMatchup(ArgumentMatchers.any())).willAnswer((invocation -> invocation.getArgument(0)));
 
-        ResultActions response = mockMvc.perform(post(MatchupController.MATCHUPS + MatchupController.ENDPOINT_ADD)
+        ResultActions response = mockMvc.perform(post(matchupEndpointBase + MatchupController.ENDPOINT_ADD)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(sampleMatchup1)));
 
@@ -127,7 +127,7 @@ class MatchupControllerTest {
         // Question -> below test only works if parameters are ArgumentMatchers.any() and not specific parameters (i.e. id = 1, matchup = sampleMatchup1). Why?
         when(mockService.updateMatchup(ArgumentMatchers.anyInt(), ArgumentMatchers.any())).thenReturn(sampleMatchup1);
 
-        ResultActions response = mockMvc.perform(put(MatchupController.MATCHUPS + MatchupController.ENDPOINT_UPDATE + "/1")
+        ResultActions response = mockMvc.perform(put(matchupEndpointBase + MatchupController.ENDPOINT_UPDATE + "/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(sampleMatchup1)));
 
@@ -141,7 +141,7 @@ class MatchupControllerTest {
     void getMatchupById() throws Exception {
         when(mockService.findMatchupById(ArgumentMatchers.anyInt())).thenReturn(sampleMatchup2);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_ID + "/2")
+        ResultActions response = mockMvc.perform(get(matchupEndpointBase + MatchupController.ENDPOINT_GET_MATCHUP_BY_ID + "/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(sampleMatchup2)));
 
@@ -159,7 +159,7 @@ class MatchupControllerTest {
         when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
                 .thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/dummyDeckName")
+        ResultActions response = mockMvc.perform(get(matchupEndpointBase + MatchupController.ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/dummyDeckName")
                 .principal(mockJWTAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -205,7 +205,7 @@ class MatchupControllerTest {
 
         when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_USERNAME + "/dummyName"));
+        ResultActions response = mockMvc.perform(get(matchupEndpointBase + MatchupController.ENDPOINT_GET_MATCHUP_BY_USERNAME + "/dummyName"));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .equals(matchups);
@@ -219,7 +219,7 @@ class MatchupControllerTest {
 
         when(mockService.getAllMatchupsByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(matchups);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_MATCHUPS_BY_FORMAT + "/dummyName"));
+        ResultActions response = mockMvc.perform(get(matchupEndpointBase + MatchupController.ENDPOINT_MATCHUPS_BY_FORMAT + "/dummyName"));
 
         response.andExpect(MockMvcResultMatchers.status().isOk())
                 .equals(matchups);
@@ -236,7 +236,7 @@ class MatchupControllerTest {
 
         when(mockService.getMatchupPercentagesByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(expectedResult);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/" + Constants.PIKACHU)
+        ResultActions response = mockMvc.perform(get(matchupEndpointBase + MatchupController.ENDPOINT_GET_MATCHUP_BY_DECKNAME + "/" + Constants.PIKACHU)
                         .principal(mockJWTAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -269,7 +269,7 @@ class MatchupControllerTest {
         matchups.add(sampleMatchup3);
 
         when(mockService.getAllMatchups()).thenReturn(matchups);
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_GET_ALL_MATCHUPS)
+        ResultActions response = mockMvc.perform(get(matchupEndpointBase + MatchupController.ENDPOINT_GET_ALL_MATCHUPS)
                 .principal(mockJWTAuth))
         .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -292,7 +292,7 @@ class MatchupControllerTest {
 
         when(mockService.getMatchupPercentagesByDeckName(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(expectedResponse);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME + "/" + deckName)
+        ResultActions response = mockMvc.perform(get(matchupEndpointBase + MatchupController.ENDPOINT_MATCHUPS_PERCENTAGES_BY_DECKNAME + "/" + deckName)
                         .principal(mockJWTAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -311,7 +311,7 @@ class MatchupControllerTest {
 
         when(mockService.getTotalMatchesByDeck(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(expectedResponse);
 
-        ResultActions response = mockMvc.perform(get(MatchupController.MATCHUPS + MatchupController.ENDPOINT_TOTAL_GAMES + "/" + deckName)
+        ResultActions response = mockMvc.perform(get(matchupEndpointBase + MatchupController.ENDPOINT_TOTAL_GAMES + "/" + deckName)
                         .principal(mockJWTAuth))
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
