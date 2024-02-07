@@ -1,5 +1,6 @@
 package com.example.matchuptracker.service.user;
 
+import com.example.matchuptracker.exception.DuplicateDeckDisplayException;
 import com.example.matchuptracker.model.DeckDisplay;
 import com.example.matchuptracker.model.User;
 import com.example.matchuptracker.repository.DeckDisplayRepository;
@@ -67,10 +68,22 @@ public class UserServiceImpl implements UserService{
     }
 
     @Transactional
-    public DeckDisplay addDeckDisplayToUserByEmail(String email, DeckDisplay newDeckDisplay) {
-        return userRepository.findByEmail(email).map(user -> {
+    public Optional<DeckDisplay> addDeckDisplayToUserByEmail(String userEmail, DeckDisplay newDeckDisplay) {
+        Optional<User> userOpt = userRepository.findByEmail(userEmail);
+
+        if (userOpt.isEmpty()) {
+            throw new RuntimeException("User not found");
+        }
+        User user = userOpt.get();
+        boolean exists = user.getDeckDisplays().stream()
+                .anyMatch(dd -> dd.getValue().equals(newDeckDisplay.getValue()));
+        if (!exists) {
+            user.getDeckDisplays().add(newDeckDisplay);
             newDeckDisplay.setUser(user);
-            return deckDisplayRepository.save(newDeckDisplay);
-        }).orElseThrow(() -> new RuntimeException("User not found"));
+            userRepository.save(user);
+            return Optional.of(newDeckDisplay);
+        } else {
+            throw new DuplicateDeckDisplayException("A DeckDisplay with the same value already exists.");
+        }
     }
 }

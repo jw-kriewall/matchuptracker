@@ -1,6 +1,7 @@
 package com.example.matchuptracker.controller;
 
 import com.example.matchuptracker.Utils.JwtUtil;
+import com.example.matchuptracker.exception.DuplicateDeckDisplayException;
 import com.example.matchuptracker.model.DeckDisplay;
 import com.example.matchuptracker.model.LoginDTO;
 import com.example.matchuptracker.model.User;
@@ -50,8 +51,16 @@ public class UserController {
     }
 
     @PostMapping("/deckdisplays/add")
-    public ResponseEntity<DeckDisplay> addDeckDisplayToUser(Authentication authToken, @RequestBody DeckDisplay deckDisplay) {
-        DeckDisplay savedDeckDisplay = userService.addDeckDisplayToUserByEmail(JwtUtil.getEmailFromJWT(authToken), deckDisplay);
-        return ResponseEntity.ok(savedDeckDisplay);
+    public ResponseEntity<?> addDeckDisplayToUser(Authentication authToken, @RequestBody DeckDisplay deckDisplay) {
+        try {
+            String userEmail = JwtUtil.getEmailFromJWT(authToken);
+            DeckDisplay addedDeckDisplay = userService.addDeckDisplayToUserByEmail(userEmail, deckDisplay)
+                    .orElseThrow();
+            return ResponseEntity.ok(addedDeckDisplay);
+        } catch (DuplicateDeckDisplayException ex) { // Deck found
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+        } catch (RuntimeException ex) { // User not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
 }

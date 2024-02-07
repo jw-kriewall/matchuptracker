@@ -16,5 +16,5 @@ public interface UserService {
 
     List<DeckDisplay> findDeckDisplaysByEmail(String email);
 
-    DeckDisplay addDeckDisplayToUserByEmail(String email, DeckDisplay deckDisplay);
+    Optional<DeckDisplay> addDeckDisplayToUserByEmail(String email, DeckDisplay deckDisplay);
 }
