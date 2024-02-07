@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,7 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class User implements UserDetails {
 
     @Id
@@ -34,7 +32,7 @@ public class User implements UserDetails {
     private List<Deck> decks;
     @JsonProperty("role")
     private String role;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<DeckDisplay> deckDisplays;
 
@@ -99,5 +97,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                // Include deckDisplays count to avoid recursion
+                ", deckDisplaysCount=" + (deckDisplays != null ? deckDisplays.size() : 0) +
+                '}';
     }
 }

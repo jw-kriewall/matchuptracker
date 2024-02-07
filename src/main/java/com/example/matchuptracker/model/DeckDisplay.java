@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -13,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class DeckDisplay {
 
     @Id
@@ -67,6 +65,17 @@ public class DeckDisplay {
 
     public void setSprites(List<String> sprites) {
         this.sprites = sprites;
+    }
+
+    @Override
+    public String toString() {
+        return "DeckDisplay{" +
+                "value='" + value + '\'' +
+                ", label='" + label + '\'' +
+                ", format='" + format + '\'' +
+                // Reference user by ID or email to avoid recursion
+                ", userId=" + (user != null ? user.getEmail() : null) +
+                '}';
     }
 
 }

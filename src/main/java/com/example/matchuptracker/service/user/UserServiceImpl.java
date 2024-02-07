@@ -71,10 +71,13 @@ public class UserServiceImpl implements UserService{
     public Optional<DeckDisplay> addDeckDisplayToUserByEmail(String userEmail, DeckDisplay newDeckDisplay) {
         Optional<User> userOpt = userRepository.findByEmail(userEmail);
 
-        if (userOpt.isEmpty()) {
+        if (!userOpt.isPresent()) {
             throw new RuntimeException("User not found");
         }
         User user = userOpt.get();
+        System.out.println(user);
+
+        System.out.println(user.getDeckDisplays());
         boolean exists = user.getDeckDisplays().stream()
                 .anyMatch(dd -> dd.getValue().equals(newDeckDisplay.getValue()));
         if (!exists) {
