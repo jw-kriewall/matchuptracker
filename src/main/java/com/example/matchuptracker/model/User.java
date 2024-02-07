@@ -1,5 +1,6 @@
 package com.example.matchuptracker.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,23 @@ public class User implements UserDetails {
     private String username;
     @JsonProperty("password")
     private String password;
+    @JsonProperty("email")
+    private String email;
+    @OneToMany
+    private List<Deck> decks;
+    @JsonProperty("role")
+    private String role;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<DeckDisplay> deckDisplays;
+
+    public List<DeckDisplay> getDeckDisplays() {
+        return deckDisplays;
+    }
+
+    public void setDeckDisplays(List<DeckDisplay> deckDisplays) {
+        this.deckDisplays = deckDisplays;
+    }
 
     public String getEmail() {
         return email;
@@ -36,11 +54,6 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    @JsonProperty("email")
-    private String email;
-    @OneToMany
-    private List<Deck> decks;
-
     public String getRole() {
         return role;
     }
@@ -48,9 +61,6 @@ public class User implements UserDetails {
     public void setRole(String role) {
         this.role = role;
     }
-
-    @JsonProperty("role")
-    private String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,5 +1,7 @@
 package com.example.matchuptracker.controller;
 
+import com.example.matchuptracker.Utils.JwtUtil;
+import com.example.matchuptracker.model.DeckDisplay;
 import com.example.matchuptracker.model.LoginDTO;
 import com.example.matchuptracker.model.User;
 import com.example.matchuptracker.service.user.UserService;
@@ -7,9 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@ControllerAdvice
 @Slf4j
 @CrossOrigin("*")
 @RequestMapping(UserController.API + UserController.VERSION + UserController.USER_ENDPOINT)
@@ -36,5 +42,16 @@ public class UserController {
     @PostMapping("/updaterole")
     public ResponseEntity<User> updateUserRole(@RequestParam String email, String role) {
         return new ResponseEntity<>(userService.updateUserRole(email, role), HttpStatus.OK);
+    }
+
+    @GetMapping("/deckdisplays")
+    public List<DeckDisplay> getDeckDisplaysByEmail(Authentication authToken) {
+        return userService.findDeckDisplaysByEmail(JwtUtil.getEmailFromJWT(authToken));
+    }
+
+    @PostMapping("/deckdisplays/add")
+    public ResponseEntity<DeckDisplay> addDeckDisplayToUser(Authentication authToken, @RequestBody DeckDisplay deckDisplay) {
+        DeckDisplay savedDeckDisplay = userService.addDeckDisplayToUserByEmail(JwtUtil.getEmailFromJWT(authToken), deckDisplay);
+        return ResponseEntity.ok(savedDeckDisplay);
     }
 }
