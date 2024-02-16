@@ -1,5 +1,6 @@
 package com.example.matchuptracker.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -34,6 +35,8 @@ public class User implements UserDetails {
     private String role;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonManagedReference
+    @JsonIgnore
+    // @TODO: Remove JSON Ignore and put deckDisplays into own table.
     private List<DeckDisplay> deckDisplays;
 
     public List<DeckDisplay> getDeckDisplays() {
