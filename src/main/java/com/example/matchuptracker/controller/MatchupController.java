@@ -21,11 +21,9 @@ import static com.example.matchuptracker.controller.MatchupController.MATCHUPS;
 import static com.example.matchuptracker.controller.MatchupController.API;
 import static com.example.matchuptracker.controller.MatchupController.VERSION;
 
-
 @RestController
 @RequestMapping(API + VERSION + MATCHUPS)
 @Slf4j
-//@CrossOrigin(exposedHeaders = {"Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"})
 @CrossOrigin("*")
 public class MatchupController {
 

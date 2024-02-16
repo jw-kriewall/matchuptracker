@@ -1,11 +1,12 @@
 package com.example.matchuptracker.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,7 +18,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class User implements UserDetails {
 
     @Id
@@ -27,6 +27,25 @@ public class User implements UserDetails {
     private String username;
     @JsonProperty("password")
     private String password;
+    @JsonProperty("email")
+    private String email;
+    @OneToMany
+    private List<Deck> decks;
+    @JsonProperty("role")
+    private String role;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    @JsonIgnore
+    // @TODO: Remove JSON Ignore and put deckDisplays into own table.
+    private List<DeckDisplay> deckDisplays;
+
+    public List<DeckDisplay> getDeckDisplays() {
+        return deckDisplays;
+    }
+
+    public void setDeckDisplays(List<DeckDisplay> deckDisplays) {
+        this.deckDisplays = deckDisplays;
+    }
 
     public String getEmail() {
         return email;
@@ -36,11 +55,6 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    @JsonProperty("email")
-    private String email;
-    @OneToMany
-    private List<Deck> decks;
-
     public String getRole() {
         return role;
     }
@@ -48,9 +62,6 @@ public class User implements UserDetails {
     public void setRole(String role) {
         this.role = role;
     }
-
-    @JsonProperty("role")
-    private String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -89,5 +100,16 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                // Include deckDisplays count to avoid recursion
+                ", deckDisplaysCount=" + (deckDisplays != null ? deckDisplays.size() : 0) +
+                '}';
     }
 }
