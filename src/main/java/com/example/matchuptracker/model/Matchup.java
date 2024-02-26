@@ -24,6 +24,8 @@ public class Matchup {
     @NonNull
     private String winningDeck;
     private String format;
+    @Lob  // This annotation is useful especially for BLOB or CLOB data types
+    @Column(name = "notes", columnDefinition="LONGTEXT")
     private String notes;
     private Date createdOn;
     @ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE})
