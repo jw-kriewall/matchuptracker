@@ -18,4 +18,6 @@ public interface MatchupRepository extends JpaRepository<Matchup, Integer> {
     List<Matchup> findByCreatedBy_Email(String email, Sort sort);
 
     List<Matchup> findByFormat(String format);
+
+    int countByCreatedBy_Email(String email);
 }

@@ -4,6 +4,7 @@ import com.example.matchuptracker.model.Deck;
 import com.example.matchuptracker.model.Matchup;
 import com.example.matchuptracker.repository.MatchupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,11 @@ public class MatchupServiceImpl implements MatchupService {
 
     @Override
     public Matchup saveMatchup(Matchup matchup) {
+        int count = repository.countByCreatedBy_Email(matchup.getCreatedBy().getEmail());
+        if (count > 300) {
+            // Optionally, you can create a custom exception that more accurately reflects the error
+            throw new DataIntegrityViolationException("You have reached the maximum limit of 300 matchups.");
+        }
         repository.save(matchup);
         return matchup;
     }
