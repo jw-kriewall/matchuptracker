@@ -104,6 +104,12 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
     @Override
+    public List<Matchup> getAllMatchupsByPlayerEmailAndFormat(String email, String format) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdOn");
+        return repository.findByCreatedBy_EmailAndFormat(email, format, sort);
+    }
+
+    @Override
     public Map<String, Double> getMatchupPercentagesByDeckName(String email, String deckName) {
 
         Map<String, Double> winningPercentageMap = new HashMap<>();
@@ -249,9 +255,9 @@ public class MatchupServiceImpl implements MatchupService {
     }
 
     @Override
-    public Map<String, Map<String, String>> getAllMatchupRecords(String email) {
+    public Map<String, Map<String, String>> getAllMatchupRecords(String email, String format) {
         Map<String, Map<String, String>> allMatchupRecords = new HashMap<>();
-        List<Matchup> allMatchups = getAllMatchupsByPlayerEmail(email);
+        List<Matchup> allMatchups = getAllMatchupsByPlayerEmailAndFormat(email, format);
 
         // Retrieve unique deck names from all matchups
         Set<String> uniqueDeckNames = allMatchups.stream()

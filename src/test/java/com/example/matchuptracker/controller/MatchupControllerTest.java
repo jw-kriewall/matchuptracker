@@ -189,7 +189,7 @@ class MatchupControllerTest {
         when(mockRepository.findByCreatedBy_Email(dummyUser.getEmail(), sort)).thenReturn(matchups);
 
         // Act
-        Map<String, Map<String, String>> allMatchupRecords = service.getAllMatchupRecords(dummyUser.getEmail());
+        Map<String, Map<String, String>> allMatchupRecords = service.getAllMatchupRecords(dummyUser.getEmail(), "Standard");
 
         // Assert
         assertNotNull(allMatchupRecords, "The returned map should not be null");
