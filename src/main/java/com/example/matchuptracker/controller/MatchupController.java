@@ -64,6 +64,11 @@ public class MatchupController {
         return new ResponseEntity<>(service.getAllMatchupsByPlayerEmail(JwtUtil.getEmailFromJWT(authToken)), HttpStatus.OK);
     }
 
+    @GetMapping(ENDPOINT_GET_ALL + "/{format}")
+    public ResponseEntity<List<Matchup>> getAllByEmailAndFormat(Authentication authToken, @PathVariable("format") String format) throws JsonProcessingException {
+        return new ResponseEntity<>(service.getAllMatchupsByPlayerEmailAndFormat(JwtUtil.getEmailFromJWT(authToken), format), HttpStatus.OK);
+    }
+
     @GetMapping(ENDPOINT_COUNT_ALL)
     @Description("Takes in a list of deckNames. Returns a count of all matchups for display purposes")
     public ResponseEntity<Integer> countAllByEmail(Authentication authToken, @RequestParam List<String> deckNames) throws JsonProcessingException {
@@ -128,9 +133,9 @@ public class MatchupController {
         return service.getTotalMatchesByDeck(JwtUtil.getEmailFromJWT(authToken), deckName);
     }
 
-    @GetMapping(ENDPOINT_GET_ALL_MATCHUP_RECORDS)
-    public Map<String, Map<String, String>> getAllMatchupRecords(Authentication authToken) {
-        return service.getAllMatchupRecords(JwtUtil.getEmailFromJWT(authToken));
+    @GetMapping(ENDPOINT_GET_ALL_MATCHUP_RECORDS + "/{format}")
+    public Map<String, Map<String, String>> getAllMatchupRecords(Authentication authToken, @PathVariable String format) {
+        return service.getAllMatchupRecords(JwtUtil.getEmailFromJWT(authToken), format);
     }
 
     @DeleteMapping(ENDPOINT_DELETE + "/{id}")
