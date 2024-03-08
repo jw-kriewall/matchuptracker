@@ -17,7 +17,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final BCryptPasswordEncoder SECRET_KEY = new BCryptPasswordEncoder();
-    public static final long EXPIRATION_TIME_IN_MS = 3600000;
+    public static final long EXPIRATION_TIME_IN_MS = 3600000 * 3; // 3 hour duration
 
     private static final String SECRET = generateHS256SecretKey(); // Replace with your secret key
 
@@ -46,7 +46,7 @@ public class JwtUtil {
                 .setSubject(subject)
                 .setIssuedAt(now)
                 .setExpiration(expirationTime)
-                .signWith(getSecretKey(), SignatureAlgorithm.HS256 )
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();
 
         return token;
