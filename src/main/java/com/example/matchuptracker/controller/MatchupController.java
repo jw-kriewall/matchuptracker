@@ -139,8 +139,14 @@ public class MatchupController {
     }
 
     @DeleteMapping(ENDPOINT_DELETE + "/{id}")
-    public void deleteMatchups(@PathVariable int id) {
-        service.deleteMatchup(id);
+    public ResponseEntity<?> deleteMatchup(@PathVariable int id, Authentication authToken) {
+        try {
+            service.deleteMatchup(id, JwtUtil.getEmailFromJWT(authToken));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
-
 }

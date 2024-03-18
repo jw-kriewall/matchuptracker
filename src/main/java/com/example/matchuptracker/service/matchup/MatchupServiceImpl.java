@@ -276,8 +276,15 @@ public class MatchupServiceImpl implements MatchupService {
 
 
     @Override
-    public void deleteMatchup(int id) {
-        repository.delete(repository.getReferenceById(id));
+    public void deleteMatchup(int id, String email) {
+        Matchup matchup = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Matchup not found for this id: " + id));
+
+        if (!matchup.getCreatedBy().getEmail().equals(email)) {
+            throw new IllegalStateException("You are not authorized to delete this matchup");
+        }
+
+        repository.deleteById(id);
     }
 
     @Override

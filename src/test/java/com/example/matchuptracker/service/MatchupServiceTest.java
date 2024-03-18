@@ -37,6 +37,7 @@ public class MatchupServiceTest {
     private Deck sampleDeckBulbasaur = Deck.builder().name(BULBASAUR).cards("Cards").build();
     private Deck sampleDeckPidgey = Deck.builder().name(PIDGEY).cards("Cards").build();
     private User dummyUser = User.builder().email("123@gmail.com").build();
+    private User dummyUser2 = User.builder().email("differentEmail@gmail.com").build();
 
     Date date = new Date();
 
@@ -93,6 +94,17 @@ public class MatchupServiceTest {
             .winningDeck(CHARIZARD)
             .createdOn(date)
             .createdBy(dummyUser)
+            .build();
+
+    Matchup dummyMatchup6 = Matchup.builder()
+            .playerOneName(NAME_TO_CHECK)
+            .playerTwoName(DUMMY_NAME)
+            .playerOneDeck(sampleDeckCharizard)
+            .playerTwoDeck(sampleDeckCharizard)
+            .format(FORMAT)
+            .winningDeck(CHARIZARD)
+            .createdOn(date)
+            .createdBy(dummyUser2)
             .build();
 
     List<Matchup> dummyData = new ArrayList<>(List.of(dummyMatchup1, dummyMatchup2, dummyMatchup3, dummyMatchup4, dummyMatchup5));
@@ -215,7 +227,18 @@ public class MatchupServiceTest {
     @Test
     @DisplayName("Does Delete work correctly?")
     public void testDeleteMatchup() {
-        Assertions.assertAll(() -> mockService.deleteMatchup(1));
+        when(mockRepository.findById(1)).thenReturn(Optional.of(dummyMatchup1));
+        mockService.deleteMatchup(1, "123@gmail.com");
+        Mockito.verify(mockRepository).deleteById(1);
+    }
+
+    @Test
+    @DisplayName("Does Delete work throw if given wrong email?")
+    public void testDeleteMatchup2() {
+        when(mockRepository.findById(1)).thenReturn(Optional.of(dummyMatchup1));
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            mockService.deleteMatchup(1, "12345@gmail.com");
+        }, "Expected deleteMatchup to throw, but it didn't");
     }
 
     @Test
@@ -252,6 +275,21 @@ public class MatchupServiceTest {
 
         Assertions.assertNotNull(mockService.getIndividualRecordsByDeckName(CHARIZARD, charizardDummyData));
         Assertions.assertEquals(expectedRecords, mockService.getIndividualRecordsByDeckName(CHARIZARD, charizardDummyData));
+    }
+
+    @Test
+    @DisplayName("countAllByPlayerEmail returns correct count")
+    public void testCountAllByPlayerEmail() {
+        // Given
+        String email = "123@gmail.com";
+        List<String> deckNames = Arrays.asList("Pikachu", "Squirtle");
+        List<Matchup> matchups = Arrays.asList(dummyMatchup1, dummyMatchup2, dummyMatchup5);
+
+        Sort defaultSort = Sort.by(Sort.Direction.DESC, "createdOn");
+        when(mockRepository.findByCreatedBy_Email(email, defaultSort)).thenReturn(matchups);
+
+        Integer count = mockService.countAllByPlayerEmail(email, deckNames);
+        Assertions.assertEquals(2, count); // Expect 2 since two matchups contain at least one of the specified deck names
     }
 
     private Matchup getMatchup(Deck playerOneDeck, Deck playerTwoDeck, String winningDeck) {
