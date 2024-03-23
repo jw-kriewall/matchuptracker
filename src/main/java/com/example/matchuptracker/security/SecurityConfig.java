@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers( MatchupController.API + MatchupController.VERSION + MatchupController.MATCHUPS + "/**").authenticated();
                     auth.requestMatchers(UserController.API + UserController.VERSION + UserController.USER_ENDPOINT + "/**").authenticated();
+                    auth.requestMatchers("/api/v1/exchange-code").permitAll();
                     auth.requestMatchers("/secure").authenticated();
                 })
                 .oauth2ResourceServer()
